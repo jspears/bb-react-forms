@@ -33,7 +33,7 @@ var api = {
         }
     },
     nullCheck: function (v) {
-        return v == null;
+        return v != null;
     }
 }
 module.exports = api;

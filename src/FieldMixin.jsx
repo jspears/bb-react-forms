@@ -52,11 +52,15 @@ var FieldMixin = {
         }
     },
     handleValidate(e) {
-        var value = this.state.value;
-        this.validators = this.validators || this.props.validators.map(initValidators);
-        this.props.onValidate.apply(this, this.validators.map((v)=> {
+        var value = this.state.value, validators = this.props.field.validators || [];
+        if (!validators.length) {
+            return;
+        }
+        this.validators = this.validators || validators.map(initValidators);
+        var mesgs = this.validators.map((v)=> {
             return v(value)
-        }).filter(tu.nullCheck));
+        }).filter(tu.nullCheck);
+        this.props.onValidate.apply(this, mesgs);
     }
 };
 
