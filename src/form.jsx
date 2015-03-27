@@ -1,39 +1,45 @@
 var React = require('react');
-function isString(v) {
-    return (typeof v == 'string' || v instanceof String);
-}
+var tu = require('./tutils');
 
-function toArray(v) {
-    if (Array.isArray(v)) {
-        return v;
-    }
-    if (isString(v)) {
-        return v.split(/\,\s*/);
-    }
-    if (v == null) {
-        return [];
-    }
-    return [v];
-}
 
 var Template = React.createClass({
+    getInitialState() {
+        return {}
+    },
+    handleValidate(mesg) {
+        this.setState(mesg || {message: null, type: null});
+    },
+    getDefaultProps() {
+        return {
+            field: {
+                type: 'Text'
+            },
+            onValueChange() {
+            }
+
+        }
+    },
     render() {
         var {field, content} = this.props;
-        return <div className="form-group field-name">
-            <label className="col-sm-2 control-label" htmlFor={field.name}>{field.label || field.name}</label>
+        var errMessage = this.state.message;
+        var clsName = "form-group field-name " + (errMessage != null ? 'has-error' : '');
+        var type = field.type;
+
+        var Component = (type === 'Object') ? <Form schema={field.subSchema}/> : require('types/' + type + '.jsx');
+
+        return <div className={clsName}>
+            <label className="col-sm-2 control-label" htmlFor={field.name}>{field.title || field.name}</label>
             <div className="col-sm-10">
-                <span>{content}</span>
-                <p className="help-block">{field.help || ''}</p>
+                <span>
+                    <Component {...field} onValueChange={this.props.onValueChange} onValidate={this.handleValidate}/>
+                </span>
+                <p className="help-block">{errMessage || field.help || ''}</p>
             </div>
         </div>
     }
 });
-function unique(array) {
-    return array.filter(function (a, b, c) {
-        // keeps first occurrence
-        return c.indexOf(a) === b;
-    });
-};
+
+
 var Form = React.createClass({
     makeFieldset(f, i) {
 
@@ -44,36 +50,35 @@ var Form = React.createClass({
             </fieldset> :
             <div  key={'f' + i}>{this.makeFields(f.fields)}</div>
     },
-    makeField(field) {
-        var type = field.type;
-        if (type === 'Object') {
-            return <Form schema={field.subSchema}/>
+
+    handleValueChange(newValue, oldValue, property) {
+        var data = this.state.data;
+        data[property] = newValue;
+        if (this.props.onValueChange(data, this.state.data, this.props.name) !== false) {
+            this.setState({data: data});
         }
-        var Component = require('types/' + type + '.jsx');
-        return <Component {...field}/>
-
-
-    },
+    }
+    ,
     makeFields(fields) {
-        fields = toArray(fields);
+        var fieldMap = {}, data = this.props.data || {}, schema = this.props.schema.schema, Template = this.props.template;
 
-
-        var fieldMap = {}
-        fields = fields.map(function (v) {
+        fields = tu.toArray(fields).map((v) => {
             return v.split('.', 2);
-        }).map(function (v) {
+        }).map((v) => {
+            var f = v[0];
             if (v.length > 1) {
-                (fieldMap[v[0]] || (fieldMap[v[0]] = [])).push(v[1]);
+                (fieldMap[f] || (fieldMap[f] = [])).push(v[1]);
             }
-            return v[0];
+            return f;
         });
 
 
-        var data = this.props.data || {}, schema = this.props.schema.schema, Template = this.props.template;
-        return unique(fields).map((f) => {
+        return tu.unique(fields).filter((f)=> {
+            return schema[f];
+        }).map((f) => {
 
             var ref = schema[f];
-            if (isString(ref)) {
+            if (tu.isString(ref)) {
                 ref = {
                     name: f,
                     type: ref
@@ -90,24 +95,43 @@ var Form = React.createClass({
                 ref.fields = fieldMap[f];
             }
             ref._property = f;
-            return <Template key={'key-' + f}  field={ref} content={this.makeField(ref)}/>
+            return <Template key={'key-' + f} data={data && data[f]} field={ref}  onValueChange={this.handleValueChange}/>
         });
-    },
-    getDefaultProps() { 
+    }
+    ,
+    getValue() {
+
+    }
+    ,
+    getInitialState() {
+        return {
+            data: this.props.data
+        }
+    }
+    ,
+    getDefaultProps() {
         return {
             schema: {},
-            template: Template
+            template: Template,
+            data: {},
+            onValueChange: function () {
+
+            }
         }
 
-    },
+    }
+    ,
     renderSchema(schema) {
         var fieldsets = schema.fieldsets, fields = schema.fields || Object.keys(schema.schema);
-        return (Array.isArray(fieldsets) ? fieldsets : ( fieldsets.legend || fieldsets.fields) ? [fieldsets] : {fields: toArray(fields)})
+        return (Array.isArray(fieldsets) ? fieldsets : ( fieldsets.legend || fieldsets.fields) ? [fieldsets] : {fields: tu.toArray(fields)})
             .map(this.makeFieldset, this);
-    },
+    }
+    ,
     render() {
+
         var {schema, template, props} = this.props;
-        return <form {...props}>{this.renderSchema(schema)}</form>
+
+        return <form {...props}>{schema && schema.schema ? this.renderSchema(schema) : null}</form>
     }
 
 });

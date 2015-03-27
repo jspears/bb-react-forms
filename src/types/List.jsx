@@ -27,11 +27,7 @@ var SelectInput = React.createClass({
 
     render() {
         var opts = this.props.options || [];
-        return <select className="form-control" onChange={this.handleChange} name={this.props.name} value={this.state.value} title={this.props.title} placeholder={this.props.placeholder}>
-        {opts.map((o, i)=> {
-            return <option key={'s' + i}>{o}</option>
-        })}
-        </select>
+        return
     }
 
 })
