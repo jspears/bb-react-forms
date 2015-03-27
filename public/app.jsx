@@ -22,7 +22,8 @@ var App = React.createClass({
                      {legend: 'Other'}*/
                 ]
             }),
-            data: {}
+            data: {},
+            file: 'nested'
         }
     },
     parse: tu.debounce(function (value) {
@@ -45,7 +46,8 @@ var App = React.createClass({
     changeFile(e) {
         var json = require('./samples/' + e.target.value + '.js');
         this.setState({
-            schema: json
+            schema: json,
+            file: e.target.value
         });
     },
     handleValueChange(data) {
@@ -57,7 +59,7 @@ var App = React.createClass({
     render() {
         var value = JSON.stringify(this.state.data, 2);
         return <div>
-            <select onChange={this.changeFile}>
+            <select onChange={this.changeFile} value={this.state.file}>
                 <option value="nested">Nested</option>
                 <option value="normal">Normal</option>
             </select>

@@ -1,18 +1,18 @@
-module.exports = {
-    isString:function(v) {
+var api = {
+    isString: function (v) {
         return typeof v === 'string' || v instanceof String;
     },
-    unique:function(array) {
+    unique: function (array) {
         return array.filter(function (a, b, c) {
             // keeps first occurrence
             return c.indexOf(a) === b;
         });
     },
-    toArray:function(v) {
+    toArray: function (v) {
         if (Array.isArray(v)) {
             return v;
         }
-        if (isString(v)) {
+        if (api.isString(v)) {
             return v.split(/\,\s*/);
         }
         if (v == null) {
@@ -20,8 +20,8 @@ module.exports = {
         }
         return [v];
     },
-    slice:Function.call.bind(Array.prototype.slice),
-    debounce:function(fn, to) {
+    slice: Function.call.bind(Array.prototype.slice),
+    debounce: function (fn, to) {
         var ti;
 
         return function f() {
@@ -33,3 +33,4 @@ module.exports = {
         }
     }
 }
+module.exports = api;
