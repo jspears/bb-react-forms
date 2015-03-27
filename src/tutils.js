@@ -31,6 +31,9 @@ var api = {
                 fn.apply(self, args);
             }, to);
         }
+    },
+    nullCheck: function (v) {
+        return v == null;
     }
 }
 module.exports = api;
