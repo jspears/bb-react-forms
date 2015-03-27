@@ -5,19 +5,20 @@ var NestedMixin = {
 
     makeFieldset(f, i) {
 
-        return f.legend ?
+        var ret = f.legend ?
             <fieldset key={'f' + i}>
                 <legend>{f.legend}</legend>
                 {this.makeFields(f.fields)}
             </fieldset> :
             <div key={'f' + i}>{this.makeFields(f.fields)}</div>
+        return ret;
     },
 
     handleValueChange(newValue, oldValue, property) {
-        var data = this.state.data;
+        var data = this.state.value;
         data[property] = newValue;
         if (this.props.onValueChange(data, this.state.data, this.props.name) !== false) {
-            this.setState({data: data});
+            this.setState({value: data});
         }
     },
     handleValidate(){
@@ -82,7 +83,7 @@ var NestedMixin = {
 
     },
     renderSchema() {
-        var schema = this.props.schema, fieldsets = schema.fieldsets, fields = schema.fields || Object.keys(schema.schema);
+        var schema = this.schema, fieldsets = schema.fieldsets, fields = schema.fields || Object.keys(schema.schema);
         return (fieldsets && Array.isArray(fieldsets) ? fieldsets : ( fieldsets && (fieldsets.legend || fieldsets.fields) ) ? [fieldsets] : [{fields: tu.toArray(fields)}])
             .map(this.makeFieldset, this);
     }

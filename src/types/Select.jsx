@@ -1,13 +1,17 @@
-var React = require('react'),  FieldMixin = require('../FieldMixin.jsx');;
+var React = require('react'), FieldMixin = require('../FieldMixin.jsx');
 
 var SelectInput = React.createClass({
-
+    mixins: [FieldMixin],
     render() {
-        var opts = this.props.options || [];
-        return <select className="form-control"  onBlur={this.handleValidate} onChange={this.handleChange} name={this.props.name} value={this.state.value} title={this.props.title} placeholder={this.props.placeholder}>
-        {opts.map((o, i)=> {
-            return <option key={'s' + i}>{o}</option>
-        })}
+        var {field, name} = this.props;
+        var {title, placeholder} = field;
+        var opts = this.props.field.options || [];
+        return <select className="form-control" onBlur={this.handleValidate} onChange={this.handleChange}
+                       name={name} value={this.state.value} title={title}
+                       placeholder={placeholder}>
+            {opts.map((o, i)=> {
+                return <option key={'s' + i}>{o}</option>
+            })}
         </select>
     }
 

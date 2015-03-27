@@ -57,7 +57,7 @@ var App = React.createClass({
         this.parse(this.state.value);
     },
     render() {
-        var value = JSON.stringify(this.state.data, 2);
+        var value = JSON.stringify(this.state.data, null, 2);
         return <div>
             <select onChange={this.changeFile}>
                 <option value="none">None Selected</option>
