@@ -1,11 +1,12 @@
 var React = require('react');
-
-var SelectInput = React.createClass({
+var Template = require('../template.jsx');
+var List = React.createClass({
     getDefaultProps() {
         return {
-            value: '',
+            value: [],
             title: '',
             placeholder: '',
+            itemType:'Text',
             onValueChange: function () {
             }
         }
@@ -26,9 +27,12 @@ var SelectInput = React.createClass({
     },
 
     render() {
-        var opts = this.props.options || [];
-        return
+        return <ul className="">
+        {this.props.value.map((v) => {
+            return <li>{}</li>
+        })}
+        </ul>
     }
 
 })
-module.exports = SelectInput;
+module.exports = List;
