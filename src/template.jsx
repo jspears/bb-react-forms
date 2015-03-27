@@ -1,6 +1,4 @@
 var React = require('react');
-var tu = require('./tutils');
-
 
 var Template = React.createClass({
     getInitialState() {
@@ -37,7 +35,7 @@ var Template = React.createClass({
         var clsName = "form-group field-name " + (errMessage != null ? 'has-error' : '');
         var type = field.type;
 
-        var Component = (type === 'Object') ? Form : require('types/' + type + '.jsx');
+        var Component = (type === 'Object') ? require('./form.jsx') : require('types/' + type + '.jsx');
 
         return <div className={clsName}>
             <label className="col-sm-2 control-label" htmlFor={field.name}>{this.title()}</label>

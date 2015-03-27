@@ -3,15 +3,15 @@ var tu = require('./tutils');
 var Template = require('./template.jsx');
 
 
-var Form = React.createClass({
+var FormInput = React.createClass({
     makeFieldset(f, i) {
 
         return f.legend ?
             <fieldset key={'f' + i}>
                 <legend>{f.legend}</legend>
-                    {this.makeFields(f.fields)}
+                {this.makeFields(f.fields)}
             </fieldset> :
-            <div  key={'f' + i}>{this.makeFields(f.fields)}</div>
+            <div key={'f' + i}>{this.makeFields(f.fields)}</div>
     },
 
     handleValueChange(newValue, oldValue, property) {
@@ -20,8 +20,7 @@ var Form = React.createClass({
         if (this.props.onValueChange(data, this.state.data, this.props.name) !== false) {
             this.setState({data: data});
         }
-    }
-    ,
+    },
     makeFields(fields) {
         var fieldMap = {}, data = this.props.data || {}, schema = this.props.subSchema || this.props.schema.schema, Template = this.props.template;
 
@@ -58,7 +57,8 @@ var Form = React.createClass({
                 ref.fields = fieldMap[f];
             }
             ref._property = f;
-            return <Template key={'key-' + f} data={data && data[f]} field={ref}  onValueChange={this.handleValueChange}/>
+            return <Template key={'key-' + f} data={data && data[f]} field={ref}
+                             onValueChange={this.handleValueChange}/>
         });
     },
     getInitialState() {
@@ -91,4 +91,4 @@ var Form = React.createClass({
     }
 
 });
-module.exports = Form;
+module.exports = FormInput;
