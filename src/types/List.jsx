@@ -27,26 +27,27 @@ var ListInput = React.createClass({
         }
     },
     getInitialState() {
+        var value = this.props.value || []
         return {
-            value: []
+            wrapped: value.map(toValues)
         }
     },
     handleMoveUp(pos, val) {
         console.log('move-up', arguments);
-        var values = this.state.value, oval = values && values.concat();
+        var values = this.state.wrapped, oval = values && values.concat();
         values.splice(Math.max(pos - 1, 0), 0, values.splice(pos, 1)[0]);
         this.changeValue(values, oval);
     },
     handleMoveDown(pos, val) {
         console.log('move-down', arguments);
-        var values = this.state.value, oval = values && values.concat();
+        var values = this.state.wrapped, oval = values && values.concat();
         values.splice(Math.min(pos + 1, values.length), 0, values.splice(pos, 1)[0]);
         this.changeValue(values, oval);
 
     },
-    handleDelete(pos, val) {
+    handleDelete(pos, val, pid) {
         console.log('delete', arguments);
-        var values = this.state.value, oval = values && values.concat();
+        var values = this.state.wrapped, oval = values && values.concat();
         values.splice(pos, 1);
         this.changeValue(values, oval);
     },
@@ -60,14 +61,15 @@ var ListInput = React.createClass({
         });
     },
     changeValue(newValue, oldValue) {
-        if (this.props.onValueChange(newValue.map(extractValue), oldValue && oldValue.map(extractValue), this.props.name) !== false) {
-            this.setState({
-                value: newValue,
-                showAdd: false
-            });
-            return true;
+        var unwrapped = newValue.map(extractValue);
+        if (this.props.onValueChange(unwrapped, oldValue && oldValue.map(extractValue), this.props.name) !== false) {
         }
-        return false;
+        this.props.value = unwrapped;
+        this.setState({
+            wrapped: newValue,
+            showAdd: false,
+            showEdit: false
+        });
 
     },
     handleAddBtn(e) {
@@ -87,22 +89,20 @@ var ListInput = React.createClass({
     },
     handleEditValue(e) {
         e && e.preventDefault();
-        var value = this.state.value || [], ov = this._editId, nv = this._newValue;
-        value.some(function (v) {
+        var value = this.state.wrapped || [], ov = this._editId, nv = this._newValue, pos = 0;
+        value.some(function (v, i) {
             if (v.id === ov) {
+                pos = i;
                 v.value = nv;
                 return true;
             }
         });
-        this.setState({
-            value: value,
-            showAdd: false,
-            showEdit: false
-        });
+        this.changeValue(value);
+
     },
 
     addValue(newValue) {
-        var values = this.state.value || [], oval = values && values.concat();
+        var values = this.state.wrapped || [], oval = values && values.concat();
         values.push(toValues(newValue, values.length));
         this.changeValue(values, oval);
 
@@ -110,11 +110,7 @@ var ListInput = React.createClass({
     updateNewValue(v) {
         this._newValue = v;
     },
-    componentDidMount() {
-        this.setState({
-            value: this.props.value && this.props.value.map(toValues) || []
-        })
-    },
+
     renderAddTemplate() {
         var newField = this._item;
         return <div>
@@ -149,11 +145,11 @@ var ListInput = React.createClass({
     },
 
     render() {
-
+        console.log('render');
         var {name, itemTemplate, itemType, errors, path,field} = this.props, item = (!itemType || _.isString(itemType)) ? {
             type: itemType || 'Text',
             name: name
-        } : itemType, ListItemTemplate = itemTemplate, values = this.state.value || [], length = values.length;
+        } : itemType, ListItemTemplate = itemTemplate, values = this.state.wrapped || [], length = values.length;
         item.canReorder = field.canReorder;
         item.canDelete = field.canDelete;
         item.canEdit = field.canEdit;

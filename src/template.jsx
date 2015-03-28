@@ -51,7 +51,7 @@ var Template = React.createClass({
             {title ? <label className="col-sm-2 control-label" htmlFor={name}>{title}</label> : null}
 
             <div className="col-sm-10">
-                <Component {...props} field={field} name={name}
+                <Component ref="editor" {...props} field={field} name={name}
                            onValidate={this.handleValidate}/>
 
                 <p className="help-block">{errMessage || help || ''}</p>

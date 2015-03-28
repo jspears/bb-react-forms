@@ -15,18 +15,19 @@ var NestedMixin = {
     },
 
     handleValueChange(newValue, oldValue, property) {
-        var value = this.state.value || {};
+        var value = this.props.value || {};
         value[property] = newValue;
-        if (this.props.onValueChange(value, this.state.value, this.props.name) !== false) {
-            this.setState({value: value});
+        if (this.props.onValueChange(value, this.props.value, this.props.name) !== false) {
+//           this.props.value {value: value});
         }
     },
     handleValidate(){
         console.log('handle', arguments);
         this.props.onValidate.apply(this, arguments);
     },
+
     makeFields(fields) {
-        var fieldMap = {}, data = this.state.value, schema = this.schema.schema, Template = this.props.template;
+        var fieldMap = {}, data = this.props.value, schema = this.schema.schema, Template = this.props.template;
 
         fields = tu.toArray(fields).map((v) => {
             return v.split('.', 2);
@@ -61,19 +62,15 @@ var NestedMixin = {
                 ref.fields = fieldMap[f];
             }
             ref._property = f;
-            return <Template ref={f} key={'key-' + f} path={tpath(this.props.path, f)} value={data && data[f]} field={ref}
+            return <Template ref={f} key={'key-' + f} path={tpath(this.props.path, f)} value={data && data[f]}
+                             field={ref}
                              onValueChange={this.handleValueChange} onValidate={this.handleValidate}/>
         });
     },
-    getInitialState() {
-        return {
-            //           value: this.props.value
-        }
-    },
+
     getDefaultProps() {
         return {
             template: Template,
-            value: null,
             path: null,
             onValueChange() {
 
@@ -82,6 +79,9 @@ var NestedMixin = {
             }
         }
 
+    },
+    getInitialState(){
+        return {}
     },
     renderSchema() {
         var schema = this.schema, fieldsets = schema.fieldsets, fields = schema.fields || Object.keys(schema.schema);

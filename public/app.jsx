@@ -4,27 +4,31 @@ var Form = require('bb-react-forms').Form;
 var tu = require('../src/tutils');
 
 var App = React.createClass({
-    getInitialState() {
-        return {
-            value: JSON.stringify({
-                schema: {
-                    title: {type: 'Select', options: ['Mr', 'Mrs', 'Ms']},
-                    name: 'Text'/*,
-                     email: {validators: ['required', 'email']},
-                     birthday: 'Date',
-                     password: 'Password',
-                     address: {type: 'NestedModel'},
-                     notes: {type: 'List', itemType: 'Text'}*/
-                },
-                fieldsets: [
-                    {legend: 'Name', fields: ['title', 'name']}/*, 'email', 'password']},
-                     {legend: 'Birthday', fields: 'birthday'},
-                     {legend: 'Other'}*/
-                ]
-            }),
-            data: {},
-            file: 'nested'
-        }
+    /* getInitialState() {
+     return {
+     schema: JSON.stringify({
+     schema: {
+     title: {type: 'Select', options: ['Mr', 'Mrs', 'Ms']},
+     name: 'Text'/!*,
+     email: {validators: ['required', 'email']},
+     birthday: 'Date',
+     password: 'Password',
+     address: {type: 'NestedModel'},
+     notes: {type: 'List', itemType: 'Text'}*!/
+     },
+     fieldsets: [
+     {legend: 'Name', fields: ['title', 'name']}/!*, 'email', 'password']},
+     {legend: 'Birthday', fields: 'birthday'},
+     {legend: 'Other'}*!/
+     ],
+     submitButton: 'Save'
+     }),
+     data: {},
+     file: 'nested'
+     }
+     },*/
+    getInitialState(){
+        return {}
     },
     parse: tu.debounce(function (value) {
         if (!value)
@@ -47,21 +51,20 @@ var App = React.createClass({
         this.loadFile(e.target.value);
     },
     loadFile(value){
-        var json = value  !== 'none' ? require('./samples/' + value + '.js') : {};
-        this.setState({
-            schema: json,
-            file: value
-        });
+        var json = value !== 'none' ? require('./samples/' + value + '.js') : {schema: {}};
+        json.output = null;
+        this.setState(json);
     },
-    handleValueChange(data) {
-        this.setState({data: data});
-    },
-    componentDidMount() {
-      //  this.parse(this.state.value);
+
+    componentWillMount() {
+        //  this.parse(this.state.value);
         this.loadFile('list');
     },
+    handleValueChange(value){
+        this.setState({output: value});
+    },
     render() {
-        var value = JSON.stringify(this.state.data, null, 2);
+        var value = JSON.stringify(this.state.output || this.state.data || {}, null, 2);
         return <div>
             <select onChange={this.changeFile}>
                 <option value="none">None Selected</option>

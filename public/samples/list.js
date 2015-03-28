@@ -1,15 +1,21 @@
 module.exports = {
-    "schema": {
-        "todos": {
-            type: "List",
-            canAdd:true,
-            canDelete:true,
-            canReorder:true,
-            canEdit:true
-        }
+    schema: {
+        "schema": {
+            "todos": {
+                type: "List",
+                canAdd: true,
+                canDelete: true,
+                canReorder: true,
+                canEdit: true
+            }
+        },
+        "fieldsets": [{
+            "legend": "Todo",
+            "fields": ["todos"]
+        }]
     },
-    "fieldsets": [{
-        "legend": "Todo",
-        "fields": ["todos"]
-    }]
-};
+    data: {
+        todos: ['Get Stuff', 'Do Stuff', 'Go Home']
+    }
+}
+;
