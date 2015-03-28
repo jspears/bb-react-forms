@@ -21,7 +21,7 @@ function initValidators(v) {
     //otherwise lets try initing it.
     return validators[v]();
 }
-
+var EMPTY_ARR = [];
 var FieldMixin = {
     getDefaultProps() {
         return {
@@ -34,6 +34,9 @@ var FieldMixin = {
             onValueChange() {
             },
             onValidate() {
+            },
+            onValidChange(){
+
             }
         }
     },
@@ -41,26 +44,38 @@ var FieldMixin = {
 
     getInitialState() {
         return {
-            value: this.props.value
+            value: this.props.value,
+            isValid: true
         }
+    },
+    valueFromEvt(e){
+        return e.target.value;
     },
     handleChange(e) {
-        if (this.props.onValueChange(e.target.value, this.state.value, this.props.name) !== false) {
-            this.setState({
-                value: e.target.value
-            });
+        var newValue = this.valueFromEvt(e);
+        if (this.props.onValueChange(newValue, this.state.value, this.props.name) !== false) {
+            if (this.getErrorMessages().length === 0) {
+                this.props.onValidChange(newValue, this.state.value, this.props.name)
+                this.setState({
+                    value: newValue
+                });
+            }
         }
     },
-    handleValidate(e) {
+    getErrorMessages(){
         var value = this.state.value, validators = this.props.field.validators || [];
         if (!validators.length) {
-            return;
+            return EMPTY_ARR;
         }
         this.validators = this.validators || validators.map(initValidators);
-        var mesgs = this.validators.map((v)=> {
+        return this.validators.map((v)=> {
             return v(value)
         }).filter(tu.nullCheck);
-        this.props.onValidate.apply(this, mesgs);
+    },
+    handleValidate(e) {
+
+
+        this.props.onValidate.apply(this, this.getErrorMessages());
     }
 };
 

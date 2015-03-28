@@ -15,10 +15,10 @@ var NestedMixin = {
     },
 
     handleValueChange(newValue, oldValue, property) {
-        var data = this.state.value;
-        data[property] = newValue;
-        if (this.props.onValueChange(data, this.state.data, this.props.name) !== false) {
-            this.setState({value: data});
+        var value = this.state.value || {};
+        value[property] = newValue;
+        if (this.props.onValueChange(value, this.state.value, this.props.name) !== false) {
+            this.setState({value: value});
         }
     },
     handleValidate(){
@@ -26,7 +26,7 @@ var NestedMixin = {
         this.props.onValidate.apply(this, arguments);
     },
     makeFields(fields) {
-        var fieldMap = {}, data = this.state.value || {}, schema = this.schema.schema, Template = this.props.template;
+        var fieldMap = {}, data = this.state.value, schema = this.schema.schema, Template = this.props.template;
 
         fields = tu.toArray(fields).map((v) => {
             return v.split('.', 2);
@@ -67,13 +67,13 @@ var NestedMixin = {
     },
     getInitialState() {
         return {
-            value: this.props.value
+ //           value: this.props.value
         }
     },
     getDefaultProps() {
         return {
             template: Template,
-            value: {},
+            value: null,
             onValueChange() {
 
             },

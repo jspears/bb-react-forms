@@ -63,6 +63,7 @@ var App = React.createClass({
                 <option value="none">None Selected</option>
                 <option value="nested">Nested</option>
                 <option value="normal">Normal</option>
+                <option value="list">List</option>
             </select>
             <textarea value={this.state.value} onChange={this.handleChange}/>
             <Form schema={this.state.schema} value={this.state.data} onValueChange={this.handleValueChange}/>
