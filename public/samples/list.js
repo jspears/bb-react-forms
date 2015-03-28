@@ -4,7 +4,8 @@ module.exports = {
             type: "List",
             canAdd:true,
             canDelete:true,
-            canReorder:true
+            canReorder:true,
+            canEdit:true
         }
     },
     "fieldsets": [{
