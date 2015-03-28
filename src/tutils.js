@@ -8,6 +8,17 @@ var api = {
             return c.indexOf(a) === b;
         });
     },
+    path: function () {
+        var args = api.slice(arguments), l = args.length, i = 0, j = 0, p;
+        var ret = '';
+        for (; i < l; i++) {
+            p = args[i];
+            if (p == null || p === '') continue;
+            ret += (j++ === 0) ? p : "." + p;
+        }
+        return ret;
+
+    },
     toArray: function (v) {
         if (Array.isArray(v)) {
             return v;

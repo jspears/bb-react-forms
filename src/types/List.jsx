@@ -29,15 +29,6 @@ var ListInput = React.createClass({
             value: []
         }
     },
-    handleChange(e) {
-        /*if (this.props.onValueChange(e.target.value, this.state.value, this.props.name) !== false) {
-         this.setState({
-         value: e.target.value
-         });
-
-         }*/
-
-    },
     handleMoveUp(pos, val){
         console.log('move-up', arguments);
         var values = this.state.value, oval = values && values.concat();
@@ -120,7 +111,7 @@ var ListInput = React.createClass({
 
     render() {
 
-        var {name, itemTemplate, itemType, errors, field} = this.props, item = (!itemType || _.isString(itemType)) ? {
+        var {name, itemTemplate, itemType, errors, path,field} = this.props, item = (!itemType || _.isString(itemType)) ? {
             type: itemType || 'Text',
             name: name
         } : itemType;
@@ -132,7 +123,7 @@ var ListInput = React.createClass({
             {this.renderAdd()}
             <ul className="edit-list">
                 {values.map((v, i) => {
-                    return <ListItemTemplate key={'li-'+name+'-'+v.id} pos={i} onMoveUp={this.handleMoveUp}
+                    return <ListItemTemplate key={'li-'+name+'-'+v.id} pos={i} path={path} onMoveUp={this.handleMoveUp}
                                              onMoveDown={this.handleMoveDown} onDelete={this.handleDelete}
                                              field={item}
                                              value={v.value} errors={errors} last={i+1 === length}/>

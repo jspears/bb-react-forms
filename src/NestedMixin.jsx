@@ -1,5 +1,5 @@
 var React = require('react');
-var tu = require('./tutils');
+var tu = require('./tutils'), tpath = tu.path;
 var Template = require('./template.jsx');
 var NestedMixin = {
 
@@ -61,19 +61,20 @@ var NestedMixin = {
                 ref.fields = fieldMap[f];
             }
             ref._property = f;
-            return <Template key={'key-' + f} value={data && data[f]} field={ref}
+            return <Template key={'key-' + f} path={tpath(this.props.path, f)} value={data && data[f]} field={ref}
                              onValueChange={this.handleValueChange} onValidate={this.handleValidate}/>
         });
     },
     getInitialState() {
         return {
- //           value: this.props.value
+            //           value: this.props.value
         }
     },
     getDefaultProps() {
         return {
             template: Template,
             value: null,
+            path: null,
             onValueChange() {
 
             },

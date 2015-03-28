@@ -24,7 +24,7 @@ module.exports = {
         "fields": ["title", "name", "email"]
     },
         {
-            legend: "Address",
+            legend: "Something else",
             fields: "address.street, address.city, address.zip"
         }
 

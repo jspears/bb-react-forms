@@ -1,4 +1,5 @@
 var React = require('react');
+var tpath = require('../tutils').path;
 
 var ListItemTemplate = React.createClass({
     getDefaultProps(){
@@ -35,7 +36,7 @@ var ListItemTemplate = React.createClass({
         var {type, name, canReorder, canDelete} = field;
         var Component = require('./' + type + '.jsx');
         return <li>
-            <Component field={field} value={value} onValidate={onValidate} onValueChange={onValueChange}/>
+            <Component field={field} value={value} path={tpath(this.props.path, this.props.pos)} onValidate={onValidate} onValueChange={onValueChange}/>
 
             <div className="button-group  pull-right">
                 {canReorder ? <button onClick={this.handleMoveUp} className={'tiny-button '+(pos == 0 ? 'hide':'') }

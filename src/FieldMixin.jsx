@@ -41,29 +41,40 @@ var FieldMixin = {
         }
     },
     dataType: 'text',
-
+    componentWillMount(){
+        /**
+         * So it should not be in error until either it has lost focus, or it has been correct and then went into error.
+         * @type {boolean}
+         * @private
+         */
+        this._hasValidated = false;
+    },
     getInitialState() {
         return {
-            value: this.props.value,
-            isValid: true
+            value: this.props.value
         }
     },
     valueFromEvt(e){
         return e.target.value;
     },
     handleChange(e) {
-        var newValue = this.valueFromEvt(e);
-        if (this.props.onValueChange(newValue, this.state.value, this.props.name) !== false) {
-            if (this.getErrorMessages().length === 0) {
-                this.props.onValidChange(newValue, this.state.value, this.props.name)
-                this.setState({
-                    value: newValue
-                });
+        var newValue = this.valueFromEvt(e), errors = this.getErrorMessages(newValue), isValid = errors.length === 0;
+        if (isValid) {
+            if (this.props.onValueChange(newValue, this.state.value, this.props.name) !== false) {
+                this._hasValidated = true;
+                this.triggerOnValidate(errors, newValue);
             }
+        } else if (this._hasValidated) {
+            this.triggerOnValidate(errors, newValue);
         }
+
+        this.setState({
+            value: newValue
+        });
+
     },
-    getErrorMessages(){
-        var value = this.state.value, validators = this.props.field.validators || [];
+    getErrorMessages(value){
+        var validators = this.props.field.validators || [];
         if (!validators.length) {
             return EMPTY_ARR;
         }
@@ -72,10 +83,12 @@ var FieldMixin = {
             return v(value)
         }).filter(tu.nullCheck);
     },
+    triggerOnValidate(errors, newValue){
+        this.props.onValidate(errors, newValue, this.props.path);
+    },
     handleValidate(e) {
-
-
-        this.props.onValidate.apply(this, this.getErrorMessages());
+        var newValue = this.valueFromEvt(e);
+        this.triggerOnValidate(this.getErrorMessages(newValue), newValue, this.props.path);
     }
 };
 

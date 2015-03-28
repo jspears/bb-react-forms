@@ -4,17 +4,24 @@ var tu = require('./tutils');
 
 var Template = React.createClass({
     getInitialState() {
-        return {}
+        return {
+            message: this.props.error && (this.props.error.message || this.props.error)
+        }
     },
     handleValidate(mesg) {
-        this.setState(mesg || {message: null, type: null});
-        this.props.onValidate(mesg);
+        if (mesg.length) {
+            this.setState({message: mesg[0].message || mesg[0]});
+        } else {
+            this.setState({message: null});
+        }
+        this.props.onValidate.apply(this, arguments);
     },
     getDefaultProps() {
         return {
             field: {
                 type: 'Text'
             },
+
             onValueChange() {
             },
             onValidate() {
@@ -23,7 +30,7 @@ var Template = React.createClass({
     },
     title: function () {
         var field = this.props.field || {};
-        if (field.title) {
+        if (field.title != null) {
             return field.title;
         }
         //Add spaces
