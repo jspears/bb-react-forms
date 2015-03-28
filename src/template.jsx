@@ -39,21 +39,20 @@ var Template = React.createClass({
         });
     },
     render() {
-        var {field,onValueChange, name, value, ...props} = this.props;
+        var {field, name,  onValidate, ...props} = this.props;
+
+        var {name,type,fieldClass, help} = field;
+
         var errMessage = this.state.message;
-        var clsName = "form-group field-name " + (errMessage != null ? 'has-error' : '');
-        var {name,type, help} = field;
-
         var Component = require('types/' + type + '.jsx');
+        var title = this.title();
 
-        return <div className={clsName}>
-            <label className="col-sm-2 control-label" htmlFor={name}>{this.title()}</label>
+        return <div className={"form-group field-name " + (errMessage != null ? 'has-error' : '') + ' ' + fieldClass}>
+            {title ? <label className="col-sm-2 control-label" htmlFor={name}>{title}</label> : null}
 
             <div className="col-sm-10">
-                <span>
-                    <Component field={field} value={value} name={name} {...props} onValueChange={onValueChange}
-                               onValidate={this.handleValidate}/>
-                </span>
+                <Component {...props} field={field} name={name}
+                           onValidate={this.handleValidate}/>
 
                 <p className="help-block">{errMessage || help || ''}</p>
             </div>

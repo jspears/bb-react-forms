@@ -61,7 +61,7 @@ var NestedMixin = {
                 ref.fields = fieldMap[f];
             }
             ref._property = f;
-            return <Template key={'key-' + f} path={tpath(this.props.path, f)} value={data && data[f]} field={ref}
+            return <Template ref={f} key={'key-' + f} path={tpath(this.props.path, f)} value={data && data[f]} field={ref}
                              onValueChange={this.handleValueChange} onValidate={this.handleValidate}/>
         });
     },
