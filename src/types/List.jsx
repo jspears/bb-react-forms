@@ -91,7 +91,7 @@ var ListInput = React.createClass({
             name: 'newValue'
         } : this.props.field.itemType
         return <div>
-            <Template field={newField} value={this.state.newValue} name="newValue" onValidChange={this.updateNewValue}/>
+            <Template field={newField} value={this.state.newValue} name="newValue" onValueChange={this.updateNewValue}/>
             <button className="button pull-right" onClick={this.handleAddValue}>Add</button>
             <button className="button pull-right" onClick={this.handleCancelAdd}>Cancel</button>
         </div>
@@ -105,7 +105,9 @@ var ListInput = React.createClass({
         if (!field.canAdd) {
             return null;
         }
-        return this.state.showAdd ? this.renderAddTemplate() : this.renderAddBtn();
+        return <div className="panel panel-default">
+                <div className="panel-body">{this.state.showAdd ? this.renderAddTemplate() : this.renderAddBtn()}</div>
+            </div>
 
     },
 
@@ -121,7 +123,7 @@ var ListInput = React.createClass({
         var values = this.state.value || [], length = values.length;
         return <div>
             {this.renderAdd()}
-            <ul className="edit-list">
+            <ul className="edit-list bbf-list list-group">
                 {values.map((v, i) => {
                     return <ListItemTemplate key={'li-'+name+'-'+v.id} pos={i} path={path} onMoveUp={this.handleMoveUp}
                                              onMoveDown={this.handleMoveDown} onDelete={this.handleDelete}
