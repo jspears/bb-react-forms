@@ -44,17 +44,21 @@ var App = React.createClass({
         this.parse(e.target.value);
     },
     changeFile(e) {
-        var json = e.target.value  !== 'none' ? require('./samples/' + e.target.value + '.js') : {};
+        this.loadFile(e.target.value);
+    },
+    loadFile(value){
+        var json = value  !== 'none' ? require('./samples/' + value + '.js') : {};
         this.setState({
             schema: json,
-            file: e.target.value
+            file: value
         });
     },
     handleValueChange(data) {
         this.setState({data: data});
     },
     componentDidMount() {
-        this.parse(this.state.value);
+      //  this.parse(this.state.value);
+        this.loadFile('list');
     },
     render() {
         var value = JSON.stringify(this.state.data, null, 2);

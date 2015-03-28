@@ -32,10 +32,10 @@ module.exports = {
     entry: entry,
 
     output: {
-        path: '.build',
+        path: '.build/',
         filename: '[name].js',
         chunkFilename: '[id].chunk.js',
-        publicPath: '.build'
+        publicPath: '/'
     },
 
     module: {
