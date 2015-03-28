@@ -44,7 +44,7 @@ var App = React.createClass({
         this.parse(e.target.value);
     },
     changeFile(e) {
-        var json = require('./samples/' + e.target.value + '.js');
+        var json = e.target.value  !== 'none' ? require('./samples/' + e.target.value + '.js') : {};
         this.setState({
             schema: json,
             file: e.target.value
@@ -57,14 +57,16 @@ var App = React.createClass({
         this.parse(this.state.value);
     },
     render() {
-        var value = JSON.stringify(this.state.data, 2);
+        var value = JSON.stringify(this.state.data, null, 2);
         return <div>
-            <select onChange={this.changeFile} value={this.state.file}>
+            <select onChange={this.changeFile}>
+                <option value="none">None Selected</option>
                 <option value="nested">Nested</option>
                 <option value="normal">Normal</option>
+                <option value="list">List</option>
             </select>
             <textarea value={this.state.value} onChange={this.handleChange}/>
-            <Form schema={this.state.schema} data={this.state.data} onValueChange={this.handleValueChange}/>
+            <Form schema={this.state.schema} value={this.state.data} onValueChange={this.handleValueChange}/>
             <pre>{value}</pre>
         </div>
     }

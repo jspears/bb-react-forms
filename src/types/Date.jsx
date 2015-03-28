@@ -1,8 +1,9 @@
 var React = require('react'), FieldMixin = require('../FieldMixin.jsx');
 
 
-var TextInput = React.createClass({
+var DateInput = React.createClass({
     mixins: [FieldMixin],
+    dataType:'date',
     render() {
         return <input onBlur={this.handleValidate} onChange={this.handleChange} id={this.props.name}
                       className="form-control" type={this.props.dataType} value={this.state.value}
@@ -10,4 +11,4 @@ var TextInput = React.createClass({
     }
 });
 
-module.exports = TextInput;
+module.exports = DateInput;

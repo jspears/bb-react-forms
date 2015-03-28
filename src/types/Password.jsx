@@ -1,23 +1,12 @@
-var React = require('react');
+var React = require('react'), FieldMixin = require('../FieldMixin.jsx');
 
 var Password = React.createClass({
-    getDefaultProps(){
-        return {
-            value:'',
-            title:'',
-            name:'',
-            placeholder:'',
-            dataType:'text'
-        }
-    },
-    getInitialState(){
-      return {
-          value:this.props.value
-      }
-    },
+    mixins: [FieldMixin],
     render(){
-        return <input id={this.props.name} onChange={this.handleChange} className="form-control" type="password" value={this.state.value} title={this.props.title} placeholder={this.props.placeholder}/>
+        return <input id={this.props.name} onBlur={this.handleValidate} onChange={this.handleChange}
+                      className="form-control" type="password" value={this.state.value} title={this.props.title}
+                      placeholder={this.props.placeholder}/>
     }
 
-})
+});
 module.exports = Password;
