@@ -14,7 +14,6 @@ function toValues(value, id) {
 }
 
 var ListInput = React.createClass({
-    mixins: [PropsStateValueMixin],
     getDefaultProps() {
         return {
             value: [],
@@ -29,10 +28,13 @@ var ListInput = React.createClass({
         }
     },
     getInitialState() {
-        var value = this.props.value || []
-        return {
-            wrapped: value.map(toValues)
-        }
+        return this._wrapValues(this.props);
+    },
+    componentWillReceiveProps: function (newProps) {
+        this.setState(this._wrapValues(newProps));
+    },
+    _wrapValues(prop){
+        return {wrapped: prop && prop.value && prop.value.map(toValues) || []};
     },
     handleMoveUp(pos, val) {
         console.log('move-up', arguments);
@@ -112,7 +114,7 @@ var ListInput = React.createClass({
         this._newValue = v;
     },
     getValue(){
-        return this.state.value;
+        return this.state.wrapped.map(extractValue);
     },
     renderAddTemplate() {
         var newField = this._item;

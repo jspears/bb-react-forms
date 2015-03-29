@@ -1,6 +1,6 @@
 var PropsStateValueMixin = {
     componentWillReceiveProps: function (newProps) {
-        this.state.value = newProps.value;
+        this.setState({value: newProps.value});
     }
 }
 

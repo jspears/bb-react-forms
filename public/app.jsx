@@ -30,7 +30,9 @@ var App = React.createClass({
     getInitialState(){
         return {
             loadErrors: false,
-            loadData: false
+            loadData: false,
+            data: {},
+            errors: {}
         }
     },
     parse: tu.debounce(function (value) {
@@ -51,12 +53,23 @@ var App = React.createClass({
         this.parse(e.target.value);
     },
     changeFile(e) {
-        this.loadFile(e.target.value);
+        this.loadFile(e.target.value, this.state.loadData, this.state.loadErrors);
     },
-    loadFile(value){
+    loadFile(value, loadErrors, loadData){
         var json = value !== 'none' ? require('./samples/' + value + '.js') : {schema: {}};
         json.output = null;
-        this.setState(json);
+        var state = {schema: json.schema, file: value};
+        if (loadErrors) {
+            state.errors = json.errors;
+        } else {
+            state.errors = {};
+        }
+        if (loadData) {
+            state.data = json.data;
+        } else {
+            state.data = {};
+        }
+        this.setState(state);
     },
 
     componentWillMount() {
@@ -70,11 +83,15 @@ var App = React.createClass({
         console.log('errors', errors);
     },
     handleData(e){
+
+        this.loadFile(this.state.file, this.state.loadErrors, e.target.checked);
         this.setState({
             loadData: e.target.checked
         })
     },
     handleError(e){
+
+        this.loadFile(this.state.file, e.target.checked, this.state.loadData);
         this.setState({
             loadErrors: e.target.checked
         })
@@ -83,8 +100,7 @@ var App = React.createClass({
     render() {
         var value = JSON.stringify(this.state.output || this.state.data || {}, null, 2);
         var {errors, schema, data, loadErrors, loadData} = this.state;
-        if (!loadData) data = null;
-        if (!loadErrors) errors = null;
+
 
         return <div>
             <select onChange={this.changeFile}>
@@ -111,7 +127,8 @@ var App = React.createClass({
             <fieldset>
                 <legend>Schema</legend>
                 <pre>{JSON.stringify(schema || {}, null, 2)}</pre>
-            </fieldset>s
+            </fieldset>
+            s
         </div>
     }
 
