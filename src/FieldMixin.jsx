@@ -1,5 +1,5 @@
 var React = require('react');
-
+var PropsStateValueMixin = require('./PropsStateValueMixin.js');
 var FieldMixin = {
     getDefaultProps() {
         return {
@@ -39,7 +39,8 @@ var FieldMixin = {
     },
     handleValidate(e){
         this.props.onValidate(this.valueFromEvt(e), this.state.value, this.props.path);
-    }
+    },
+    componentWillReceiveProps:PropsStateValueMixin.componentWillReceiveProps
 };
 
 module.exports = FieldMixin;

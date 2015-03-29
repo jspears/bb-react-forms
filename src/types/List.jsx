@@ -3,6 +3,7 @@ var React = require('react');
 var Editor = require('../Editor.jsx');
 var _ = require('lodash');
 
+var PropsStateValueMixin = require('../PropsStateValueMixin');
 function extractValue(v) {
     return v.value;
 }
@@ -13,6 +14,7 @@ function toValues(value, id) {
 }
 
 var ListInput = React.createClass({
+    mixins: [PropsStateValueMixin],
     getDefaultProps() {
         return {
             value: [],

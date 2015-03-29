@@ -1,8 +1,10 @@
 var React = require('react');
 var FieldMixin = require('../FieldMixin.jsx');
+var PropsStateValueMixin = require('../PropsStateValueMixin');
 var tu = require('../tutils');
 
 var Checkboxes = React.createClass({
+    mixins: [PropsStateValueMixin],
     getDefaultProps() {
         return {
             value: '',
@@ -34,13 +36,13 @@ var Checkboxes = React.createClass({
         })
     },
     handleCheckChange(e){
-        var newValues = this.state.value.concat();
+        var newValues = this.state.value ? this.state.value.concat() : [];
         if (e.target.checked) {
             newValues.push(e.target.value);
         } else {
             newValues.splice(newValues.indexOf(e.target.value), 1);
         }
-        this.props.onValueChange(newValues, this.state.values, this.props.path);
+        this.props.onValueChange(newValues, this.state.value, this.props.path);
         this.setState({
             value: newValues
         });
@@ -52,11 +54,11 @@ var Checkboxes = React.createClass({
 
         var id = tu.path(this.props.path, index, group);
         var {val, labelHTML} = option;
-
+        var value = this.state.value || [];
         var label = labelHTML ? <label htmlFor={id} dangerouslySetInnerHTML={{__html:labelHTML}}/> :
             <label htmlFor={id}>{val}</label>;
 
-        return [<input ref={id.replace(/\./g, '_')} checked={!!~this.state.value.indexOf(val)} type="checkbox"
+        return [<input ref={id.replace(/\./g, '_')} checked={!!~value.indexOf(val)} type="checkbox"
                        name={this.props.field.name} id={id} value={val}
                        onChange={this.handleCheckChange}/>,
             label];
@@ -91,6 +93,7 @@ var Checkboxes = React.createClass({
 
     render()
     {
+
         return (<ul>{this.makeOptions(this.props.field.options, 1)}</ul>)
     }
 });

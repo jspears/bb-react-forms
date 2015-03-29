@@ -25,14 +25,7 @@ function initValidators(v) {
 
 var Editor = React.createClass({
     getInitialState() {
-        var {errors, path} = this.props;
-        var e = (errors && errors[path] || EMPTY_OBJ).message;
-        if (e != null) {
-            this._hasValidated = true;
-        }
-        return {
-            message: e
-        }
+       return this._handleErrorObj(this.props);
     },
     getDefaultProps() {
         return {
@@ -45,6 +38,19 @@ var Editor = React.createClass({
             }
 
         }
+    },
+    _handleErrorObj(props){
+        var {errors, path} = props;
+        var e = (errors && errors[path] || EMPTY_OBJ).message;
+        if (e != null) {
+            this._hasValidated = true;
+        }
+        return {
+            message: e
+        }
+    },
+    componentWillReceiveProps(newProps) {
+       this.setState(this._handleErrorObj(newProps));
     },
     componentWillMount(){
         var validators = this.props.field.validators;

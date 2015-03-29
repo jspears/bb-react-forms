@@ -28,7 +28,10 @@ var App = React.createClass({
      }
      },*/
     getInitialState(){
-        return {}
+        return {
+            loadErrors: false,
+            loadData: false
+        }
     },
     parse: tu.debounce(function (value) {
         if (!value)
@@ -66,24 +69,49 @@ var App = React.createClass({
     handleErrors: function (errors) {
         console.log('errors', errors);
     },
+    handleData(e){
+        this.setState({
+            loadData: e.target.checked
+        })
+    },
+    handleError(e){
+        this.setState({
+            loadErrors: e.target.checked
+        })
+    },
+
     render() {
         var value = JSON.stringify(this.state.output || this.state.data || {}, null, 2);
-        var errors = this.state.errors;
+        var {errors, schema, data, loadErrors, loadData} = this.state;
+        if (!loadData) data = null;
+        if (!loadErrors) errors = null;
+
         return <div>
             <select onChange={this.changeFile}>
                 <option value="none">None Selected</option>
                 <option value="checkboxes">Checkboxes</option>
+                <option value="radio">Radio</option>
                 <option value="nested">Nested</option>
-                <option value="nested-data">Nested Data</option>
-                <option value="nested-errors">Nested Errors</option>
                 <option value="normal">Normal</option>
                 <option value="list">List</option>
             </select>
-            <textarea value={this.state.value} onChange={this.handleChange}/>
-            <Form schema={this.state.schema} value={this.state.data} errors={errors}
+            <label>Load Data:
+                <input type="checkbox" onChange={this.handleData}/>
+            </label>
+            <label>Load Errors:
+                <input type="checkbox" onChange={this.handleError}/>
+            </label>
+            <Form schema={schema} value={data}
+                  errors={ errors }
                   onValueChange={this.handleValueChange} onValidate={this.handleErrors}/>
-            <pre>{value}</pre>
-
+            <fieldset>
+                <legend>Data</legend>
+                <pre>{JSON.stringify(data || {}, null, 2)}</pre>
+            </fieldset>
+            <fieldset>
+                <legend>Schema</legend>
+                <pre>{JSON.stringify(schema || {}, null, 2)}</pre>
+            </fieldset>s
         </div>
     }
 
