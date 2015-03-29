@@ -1,11 +1,13 @@
 var React = require('react');
 var tu = require('./tutils');
-
+var EMPTY_OBJ = {};
 
 var Template = React.createClass({
     getInitialState() {
+        var {errors, path} = this.props;
+        var e = errors && errors[path] || EMPTY_OBJ;
         return {
-            message: this.props.errors && (this.props.errors.message || this.props.errors)
+            message: e.message
         }
     },
     handleValidate(mesg) {

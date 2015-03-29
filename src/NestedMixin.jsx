@@ -35,7 +35,6 @@ var NestedMixin = {
     },
     makeFields(fields) {
         var fieldMap = {}, {errors, value}  = this.props, schema = this.schema.schema, Template = this.props.template;
-
         fields = tu.toArray(fields).map((v) => {
             return v.split('.', 2);
         }).map((v) => {
@@ -51,7 +50,7 @@ var NestedMixin = {
             return schema[f];
         }).map((f) => {
 
-            var ref = schema[f];
+            var ref = schema[f], path = tpath(this.props.path, f);
             if (tu.isString(ref)) {
                 ref = {
                     name: f,
@@ -69,9 +68,9 @@ var NestedMixin = {
                 ref.fields = fieldMap[f];
             }
             ref._property = f;
-            return <Template ref={f} key={'key-' + f} path={tpath(this.props.path, f)} value={value && value[f]}
+            return <Template ref={f} key={'key-' + f} path={path} value={value && value[f]}
                              field={ref}
-                             errors={errors && errors[f]}
+                             errors={errors}
                              onValueChange={this.handleValueChange} onValidate={this.handleValidate}/>
         });
     },

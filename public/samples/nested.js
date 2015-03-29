@@ -13,6 +13,7 @@ module.exports = {
             },
             "address": {
                 type: "Object",
+                title:false,
                 subSchema: {
                     street: 'Text',
                     city: 'Text',
@@ -29,7 +30,7 @@ module.exports = {
             "fields": ["title", "name", "email"]
         },
             {
-                legend: "Something else",
+                legend: "Address",
                 fields: "address.street, address.city, address.state, address.zip"
             }
 

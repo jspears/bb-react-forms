@@ -73,6 +73,7 @@ var App = React.createClass({
             <select onChange={this.changeFile}>
                 <option value="none">None Selected</option>
                 <option value="nested">Nested</option>
+                <option value="nested-errors">Nested Errors</option>
                 <option value="normal">Normal</option>
                 <option value="list">List</option>
             </select>
