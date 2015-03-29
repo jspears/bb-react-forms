@@ -22,6 +22,7 @@ function initValidators(v) {
     //otherwise lets try initing it.
     return validators[v]();
 }
+
 var Editor = React.createClass({
     getInitialState() {
         var {errors, path} = this.props;
@@ -42,6 +43,7 @@ var Editor = React.createClass({
             },
             onValidate() {
             }
+
         }
     },
     componentWillMount(){
@@ -49,10 +51,7 @@ var Editor = React.createClass({
         this.validators = validators ? validators.map(initValidators) : EMPTY_ARR;
     },
     handleValidate(newValue, oldValue, path) {
-        var errors = this.getErrorMessages(newValue);
-        this.setState({
-            message: errors && errors[0] && errors[0].message
-        });
+        this.validate(newValue)
     },
     handleChange(newValue, oldValue, path) {
         var errors = this.getErrorMessages(newValue), isValid = errors.length === 0;
@@ -70,8 +69,23 @@ var Editor = React.createClass({
 
 
     },
+    getValue(){
+        return this.refs.field.getValue();
+    },
+    /**
+     * Runs validation and updates empty fields.
+     *
+     */
+        validate(value){
+        value = arguments.length === 0 ? this.getValue() : value;
+        var errors = this.getErrorMessages(this.getValue());
+        this.setState({
+            message: errors && errors[0] && errors[0].message
+        });
+        return errors;
+    },
     getErrorMessages(value){
-        value = value === void(0) ? this.refs.field.getValue() : value;
+        value = arguments.length === 0 ? this.getValue() : value;
 
         return this.validators.map((v)=> {
             return v(value, this.refs);
@@ -91,12 +105,13 @@ var Editor = React.createClass({
     },
     render() {
         var {field, name, onValueChange, onValidate, ...props} = this.props,
-            {name,type,fieldClass, help} = field,
+            {name,type,fieldClass, errorClassName, help} = field,
             errMessage = this.state.message,
             Component = require('types/' + type + '.jsx'),
-            title = this.title();
+            title = this.title(),
+            errorClassName = errorClassName == null ? 'has-error' : errorClassName;
 
-        return <div className={"form-group field-name " + (errMessage != null ? 'has-error' : '') + ' ' + fieldClass}>
+        return <div className={"form-group field-name " + (errMessage != null ? errorClassName : '') + ' ' + fieldClass}>
             {title ? <label className="col-sm-2 control-label" htmlFor={name}>{title}</label> : null}
 
             <div className="col-sm-10">

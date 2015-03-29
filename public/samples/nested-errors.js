@@ -1,4 +1,4 @@
-var nested = require('./nested');
+var nested = require('./nested-data');
 module.exports = {
 
     schema: nested.schema,

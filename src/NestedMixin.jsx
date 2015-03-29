@@ -23,7 +23,6 @@ var NestedMixin = {
         }
     },
     handleValidate(){
-        console.log('handle', arguments);
         this.props.onValidate.apply(this, arguments);
     },
     getErrorMessages(){
@@ -31,7 +30,9 @@ var NestedMixin = {
         var errors = tu.flatten(Object.keys(refs).map((v) => {
             return {v: refs[v] && refs[v].editor.getErrorMessages()}
         }).filter(tu.nullCheck));
-        console.log('errors', errors);
+    },
+    triggerValidation(){
+
     },
     makeFields(fields) {
         var fieldMap = {}, {errors, value}  = this.props, schema = this.schema.schema, template = this.props.template;

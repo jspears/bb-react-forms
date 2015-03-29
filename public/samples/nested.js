@@ -13,7 +13,7 @@ module.exports = {
             },
             "address": {
                 type: "Object",
-                title:false,
+                title: false,
                 subSchema: {
                     street: 'Text',
                     city: 'Text',
@@ -21,7 +21,10 @@ module.exports = {
                         options: ['CA', 'NV', 'DE'],
                         type: 'Select'
                     },
-                    zip: 'Text'
+                    zip: {
+                        type: 'Text',
+                        validators: ['required', /[0-9]{5}(-([0-9]{4}))?/,]
+                    }
                 }
             }
         },
@@ -36,15 +39,5 @@ module.exports = {
 
         ]
     },
-    data: {
-        title: 'Mr',
-        name: 'bob',
-        email: 'bob@b.co',
-        address: {
-            street: '1 First St',
-            city: 'San Jose',
-            state: 'CA',
-            zip: 95109
-        }
-    }
+    data: null
 };
