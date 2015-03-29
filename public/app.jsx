@@ -63,8 +63,12 @@ var App = React.createClass({
     handleValueChange(value){
         this.setState({output: value});
     },
+    handleErrors: function (errors) {
+        console.log('errors', errors);
+    },
     render() {
         var value = JSON.stringify(this.state.output || this.state.data || {}, null, 2);
+        var errors = this.state.errors;
         return <div>
             <select onChange={this.changeFile}>
                 <option value="none">None Selected</option>
@@ -73,8 +77,10 @@ var App = React.createClass({
                 <option value="list">List</option>
             </select>
             <textarea value={this.state.value} onChange={this.handleChange}/>
-            <Form schema={this.state.schema} value={this.state.data} onValueChange={this.handleValueChange}/>
+            <Form schema={this.state.schema} value={this.state.data} errors={errors}
+                  onValueChange={this.handleValueChange} onValidate={this.handleErrors}/>
             <pre>{value}</pre>
+
         </div>
     }
 

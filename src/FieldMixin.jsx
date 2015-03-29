@@ -74,6 +74,7 @@ var FieldMixin = {
 
     },
     getErrorMessages(value){
+        value = value || this.state.value;
         var validators = this.props.field.validators || [];
         if (!validators.length) {
             return EMPTY_ARR;

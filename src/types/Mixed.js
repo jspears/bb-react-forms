@@ -15,6 +15,7 @@ var MixedInput = react.createClass({
         var diff = allowedKeys.filter(function (v) {
             return !~keys.indexOf(v)
         });
+
         return <div class="mixed-input">
 
             {Object.keys(value).map((v, k) => {

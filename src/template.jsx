@@ -5,7 +5,7 @@ var tu = require('./tutils');
 var Template = React.createClass({
     getInitialState() {
         return {
-            message: this.props.error && (this.props.error.message || this.props.error)
+            message: this.props.errors && (this.props.errors.message || this.props.errors)
         }
     },
     handleValidate(mesg) {

@@ -1,6 +1,7 @@
 var React = require('react');
 var tu = require('./tutils'), tpath = tu.path;
 var Template = require('./template.jsx');
+
 var NestedMixin = {
 
     makeFieldset(f, i) {
@@ -25,9 +26,15 @@ var NestedMixin = {
         console.log('handle', arguments);
         this.props.onValidate.apply(this, arguments);
     },
-
+    getErrorMessages(){
+        var refs = this.refs;
+        var errors = tu.flatten(Object.keys(refs).map((v) => {
+            return {v: refs[v] && refs[v].editor.getErrorMessages()}
+        }).filter(tu.nullCheck));
+        console.log('errors', errors);
+    },
     makeFields(fields) {
-        var fieldMap = {}, data = this.props.value, schema = this.schema.schema, Template = this.props.template;
+        var fieldMap = {}, {errors, value}  = this.props, schema = this.schema.schema, Template = this.props.template;
 
         fields = tu.toArray(fields).map((v) => {
             return v.split('.', 2);
@@ -62,8 +69,9 @@ var NestedMixin = {
                 ref.fields = fieldMap[f];
             }
             ref._property = f;
-            return <Template ref={f} key={'key-' + f} path={tpath(this.props.path, f)} value={data && data[f]}
+            return <Template ref={f} key={'key-' + f} path={tpath(this.props.path, f)} value={value && value[f]}
                              field={ref}
+                             errors={errors && errors[f]}
                              onValueChange={this.handleValueChange} onValidate={this.handleValidate}/>
         });
     },

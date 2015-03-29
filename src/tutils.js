@@ -19,6 +19,7 @@ var api = {
         return ret;
 
     },
+    flatten:Function.apply.bind(Array.prototype.concat, []),
     toArray: function (v) {
         if (Array.isArray(v)) {
             return v;

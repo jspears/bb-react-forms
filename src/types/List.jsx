@@ -70,7 +70,6 @@ var ListInput = React.createClass({
             showAdd: false,
             showEdit: false
         });
-
     },
     handleAddBtn(e) {
         e && e.preventDefault();
