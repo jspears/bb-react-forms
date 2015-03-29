@@ -9,7 +9,6 @@ var Form = React.createClass({
 
         var {schema, subSchema,  fields, submitButton,  ...props} = this.props;
         this.schema = subSchema ? {schema: subSchema, fields: fields} : schema;
-        var isValid = this.state.isValid;
         return <form {...props}>
             {this.schema && this.schema.schema ? this.renderSchema() : null}
             {submitButton ?

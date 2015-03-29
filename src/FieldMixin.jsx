@@ -31,14 +31,14 @@ var FieldMixin = {
     },
     handleChange(e) {
         var value = this.valueFromEvt(e);
-        this.props.onValueChange(value, this.state.value, this.props.path);
+        this.props.onValueChange(value, this.state.value, this.props.name, this.props.path);
         this.setState({
             value: value
         });
 
     },
     handleValidate(e){
-        this.props.onValidate(this.valueFromEvt(e), this.state.value, this.props.path);
+        this.props.onValidate(this.valueFromEvt(e), this.state.value, this.props.name, this.props.path);
     },
     componentWillReceiveProps:PropsStateValueMixin.componentWillReceiveProps
 };

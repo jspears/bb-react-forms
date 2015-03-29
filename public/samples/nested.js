@@ -15,7 +15,7 @@ module.exports = {
                 type: "Object",
                 title: false,
                 subSchema: {
-                    street: 'Text',
+                    street: {type: 'Text', validators: ['required']},
                     city: 'Text',
                     state: {
                         options: ['CA', 'NV', 'DE'],
@@ -23,7 +23,7 @@ module.exports = {
                     },
                     zip: {
                         type: 'Text',
-                        validators: ['required', /[0-9]{5}(-([0-9]{4}))?/,]
+                        validators: ['required', /^[0-9]{5}(-([0-9]{4}))?$/]
                     }
                 }
             }

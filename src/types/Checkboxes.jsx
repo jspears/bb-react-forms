@@ -42,7 +42,7 @@ var Checkboxes = React.createClass({
         } else {
             newValues.splice(newValues.indexOf(e.target.value), 1);
         }
-        this.props.onValueChange(newValues, this.state.value, this.props.path);
+        this.props.onValueChange(newValues, this.state.value, this.props.name);
         this.setState({
             value: newValues
         });

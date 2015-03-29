@@ -87,14 +87,14 @@ var App = React.createClass({
         this.loadFile(this.state.file, this.state.loadErrors, e.target.checked);
         this.setState({
             loadData: e.target.checked
-        })
+        });
     },
     handleError(e){
 
         this.loadFile(this.state.file, e.target.checked, this.state.loadData);
         this.setState({
             loadErrors: e.target.checked
-        })
+        });
     },
 
     render() {
@@ -103,7 +103,7 @@ var App = React.createClass({
 
 
         return <div>
-            <select onChange={this.changeFile}>
+            <select onChange={this.changeFile} value={this.state.file}>
                 <option value="none">None Selected</option>
                 <option value="checkboxes">Checkboxes</option>
                 <option value="radio">Radio</option>
@@ -128,7 +128,7 @@ var App = React.createClass({
                 <legend>Schema</legend>
                 <pre>{JSON.stringify(schema || {}, null, 2)}</pre>
             </fieldset>
-            s
+
         </div>
     }
 

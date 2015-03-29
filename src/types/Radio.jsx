@@ -45,7 +45,7 @@ var RadioInput = React.createClass({
     },
 
     handleCheckChange(e){
-        this.props.onValueChange(e.target.value, this.state.value, this.props.path);
+        this.props.onValueChange(e.target.value, this.state.value, this.props.name);
         this.setState({
             value: e.target.value
         });

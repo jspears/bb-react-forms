@@ -3,6 +3,21 @@ var tu = require('./tutils'), tpath = tu.path;
 var Editor = require('./Editor.jsx');
 
 var NestedMixin = {
+    getDefaultProps() {
+        return {
+            template: null,
+            path: null,
+            onValueChange() {
+
+            },
+            onValidate(){
+            }
+        }
+
+    },
+    getInitialState(){
+        return {};
+    },
 
     makeFieldset(f, i) {
 
@@ -28,7 +43,11 @@ var NestedMixin = {
     getErrorMessages(){
         var refs = this.refs;
         var errors = tu.flatten(Object.keys(refs).map((v) => {
-            return {v: refs[v] && refs[v].editor.getErrorMessages()}
+            var ers = refs[v] && refs[v].editor.getErrorMessages();
+            if (ers == null || ers.length === 0) return 0;
+            var msg = {};
+            msg[refs[v].props.path] = ers;
+            return msg;
         }).filter(tu.nullCheck));
     },
     triggerValidation(){
@@ -70,28 +89,14 @@ var NestedMixin = {
             }
             ref._property = f;
             return <Editor ref={f} key={'key-' + f} path={path} value={value && value[f]}
-                             field={ref}
-                             errors={errors}
-                             template={template}
-                             onValueChange={this.handleValueChange} onValidate={this.handleValidate}/>
+                           field={ref}
+                           errors={errors}
+                           template={template}
+                           onValueChange={this.handleValueChange} onValidate={this.handleValidate}/>
         });
     },
 
-    getDefaultProps() {
-        return {
-            template: null,
-            path: null,
-            onValueChange() {
 
-            },
-            onValidate(){
-            }
-        }
-
-    },
-    getInitialState(){
-        return {}
-    },
     renderSchema() {
         var schema = this.schema, fieldsets = schema.fieldsets, fields = schema.fields || Object.keys(schema.schema);
         return (fieldsets && Array.isArray(fieldsets) ? fieldsets : ( fieldsets && (fieldsets.legend || fieldsets.fields) ) ? [fieldsets] : [{fields: tu.toArray(fields)}])
