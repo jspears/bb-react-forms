@@ -6,6 +6,7 @@ var TextInput = React.createClass({
     render() {
         return <input onBlur={this.handleValidate} onChange={this.handleChange} id={this.props.name}
                       className="form-control" type={this.props.dataType} value={this.state.value}
+                      path={this.props.path}
                       title={this.props.title} placeholder={this.props.placeholder}/>
     }
 });

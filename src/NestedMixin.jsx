@@ -1,6 +1,6 @@
 var React = require('react');
 var tu = require('./tutils'), tpath = tu.path;
-var Template = require('./template.jsx');
+var Editor = require('./Editor.jsx');
 
 var NestedMixin = {
 
@@ -34,7 +34,7 @@ var NestedMixin = {
         console.log('errors', errors);
     },
     makeFields(fields) {
-        var fieldMap = {}, {errors, value}  = this.props, schema = this.schema.schema, Template = this.props.template;
+        var fieldMap = {}, {errors, value}  = this.props, schema = this.schema.schema, template = this.props.template;
         fields = tu.toArray(fields).map((v) => {
             return v.split('.', 2);
         }).map((v) => {
@@ -68,16 +68,17 @@ var NestedMixin = {
                 ref.fields = fieldMap[f];
             }
             ref._property = f;
-            return <Template ref={f} key={'key-' + f} path={path} value={value && value[f]}
+            return <Editor ref={f} key={'key-' + f} path={path} value={value && value[f]}
                              field={ref}
                              errors={errors}
+                             template={template}
                              onValueChange={this.handleValueChange} onValidate={this.handleValidate}/>
         });
     },
 
     getDefaultProps() {
         return {
-            template: Template,
+            template: null,
             path: null,
             onValueChange() {
 

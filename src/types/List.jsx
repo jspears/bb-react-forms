@@ -1,6 +1,6 @@
 var React = require('react');
 
-var Template = require('../template.jsx');
+var Editor = require('../Editor.jsx');
 var _ = require('lodash');
 
 function extractValue(v) {
@@ -109,18 +109,20 @@ var ListInput = React.createClass({
     updateNewValue(v) {
         this._newValue = v;
     },
-
+    getValue(){
+        return this.state.value;
+    },
     renderAddTemplate() {
         var newField = this._item;
         return <div>
-            <Template field={newField} value={this._newValue} name="newValue" onValueChange={this.updateNewValue}/>
+            <Editor field={newField} value={this._newValue} name="newValue" onValueChange={this.updateNewValue}/>
             <button className="button pull-right" onClick={this.handleAddValue}>Add</button>
             <button className="button pull-right" onClick={this.handleCancelAdd}>Cancel</button>
         </div>
     },
     renderEditTemplate() {
         return <div>
-            <Template field={this._item} value={this._newValue} onValueChange={this.updateNewValue}/>
+            <Editor field={this._item} value={this._newValue} onValueChange={this.updateNewValue}/>
             <button className="button pull-right" onClick={this.handleEditValue}>Save</button>
             <button className="button pull-right" onClick={this.handleCancelAdd}>Cancel</button>
         </div>
