@@ -49,16 +49,16 @@ var ListItemTemplate = React.createClass({
                   path={tpath(this.props.path, this.props.pos)}
                   dangerouslySetInnerHTML={{__html: this.props.itemToString(value)}}></span>
 
-            <div className="button-group  pull-right">
-                {canReorder ? <button onClick={this.handleMoveUp} className={'tiny-button ' + (pos == 0 ? 'hide' : '') }
+            <div className="btn-group  pull-right">
+                {canReorder && pos > 0 ? <button onClick={this.handleMoveUp} className='btn'
                                       title="Move Up">
                     <i className='glyphicon glyphicon-chevron-up'/>
                 </button> : null }
-                {canReorder ? <button onClick={this.handleMoveDown} className={'tiny-button ' + (last ? 'hide' : '') }
+                {canReorder && !last ? <button onClick={this.handleMoveDown} className='btn'
                                       title="Move Down">
                     <i className='glyphicon glyphicon-chevron-down'/>
                 </button> : null }
-                { canDelete ? <button onClick={this.handleDelete} className='tiny-button' title="Delete">
+                { canDelete ? <button onClick={this.handleDelete} className='btn' title="Delete">
                     <i
                         className='glyphicon glyphicon-remove'/>
                 </button> : null}

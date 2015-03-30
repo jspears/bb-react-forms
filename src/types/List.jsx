@@ -119,16 +119,16 @@ var ListInput = React.createClass({
     renderAddTemplate() {
         var newField = this._item;
         return <div>
-            <Editor field={newField} value={this._newValue} name="newValue" onValueChange={this.updateNewValue}/>
-            <button className="button pull-right" onClick={this.handleAddValue}>Add</button>
-            <button className="button pull-right" onClick={this.handleCancelAdd}>Cancel</button>
+            <Editor field={newField} value={this._newValue} name="newValue" onValueChange={this.updateNewValue} parent={this}/>
+            <button className="btn btn-primary pull-right" onClick={this.handleAddValue}>Add</button>
+            <button className="btn pull-left" onClick={this.handleCancelAdd}>Cancel</button>
         </div>
     },
     renderEditTemplate() {
         return <div>
-            <Editor field={this._item} value={this._newValue} onValueChange={this.updateNewValue}/>
-            <button className="button pull-right" onClick={this.handleEditValue}>Save</button>
-            <button className="button pull-right" onClick={this.handleCancelAdd}>Cancel</button>
+            <Editor field={this._item} value={this._newValue} onValueChange={this.updateNewValue} parent={this}/>
+            <button className="btn btn-primary  pull-right" onClick={this.handleEditValue}>Save</button>
+            <button className="btn pull-left" onClick={this.handleCancelAdd}>Cancel</button>
         </div>
     },
     renderAddBtn() {

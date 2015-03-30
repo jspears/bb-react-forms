@@ -7,7 +7,7 @@ var validators = require('./validators');
 function initValidators(v) {
     //If it has a type init it
     if (v.type) {
-        return (_.isFunction(v.type) ? v.type : validators[v.type])(v);
+        return validators[v.type].call(validators, v);
     }
     //If it is a RegExp than init ReExp
     if (_.isRegExp(v)) {
@@ -93,9 +93,9 @@ var Editor = React.createClass({
     },
     getErrorMessages(value){
         value = arguments.length === 0 ? this.getValue() : value;
-
+        var values = this.props.parent.getValue();
         return this.validators.map((v)=> {
-            return v(value, this.refs);
+            return v(value, values);
         }).filter(tu.nullCheck);
     },
 

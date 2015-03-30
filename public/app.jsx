@@ -1,4 +1,4 @@
-require("bootstrap-webpack!../bootstrap.config.js");
+require("style!css!less!bootstrap-webpack/bootstrap-styles!../bootstrap.config.js");
 var React = require('react');
 var Form = require('bb-react-forms').Form;
 var tu = require('../src/tutils');
@@ -102,36 +102,44 @@ var App = React.createClass({
         var {errors, schema, data, loadErrors, loadData} = this.state;
 
 
-        return <div>
-            <select onChange={this.changeFile} value={this.state.file}>
-                <option value="none">None Selected</option>
-                <option value="checkboxes">Checkboxes</option>
-                <option value="radio">Radio</option>
-                <option value="nested">Nested</option>
-                <option value="normal">Normal</option>
-                <option value="list">List</option>
-            </select>
-            <label>Load Data:
-                <input type="checkbox" onChange={this.handleData}/>
-            </label>
-            <label>Load Errors:
-                <input type="checkbox" onChange={this.handleError}/>
-            </label>
-            <Form schema={schema} value={data}
-                  errors={ errors }
-                  onValueChange={this.handleValueChange} onValidate={this.handleErrors}/>
-            <fieldset>
-                <legend>Data</legend>
-                <pre>{JSON.stringify(data || {}, null, 2)}</pre>
-            </fieldset>
-            <fieldset>
-                <legend>Schema</legend>
-                <pre>{JSON.stringify(schema || {}, null, 2)}</pre>
-            </fieldset>
+        return <div className="container-fluid">
+            <div className="row-fluid">
+                <div className="span2">
+                    <select onChange={this.changeFile} value={this.state.file}>
+                        <option value="none">None Selected</option>
+                        <option value="login">Login</option>
+                        <option value="checkboxes">Checkboxes</option>
+                        <option value="radio">Radio</option>
+                        <option value="nested">Nested</option>
+                        <option value="normal">Normal</option>
+                        <option value="list">List</option>
+                    </select>
 
+                    <label>Load Data:
+                        <input type="checkbox" onChange={this.handleData}/>
+                    </label>
+                    <label>Load Errors:
+                        <input type="checkbox" onChange={this.handleError}/>
+                    </label>
+                </div>
+                <div className="span10">
+                    <Form schema={schema} value={data}
+                          errors={ errors }
+                          onValueChange={this.handleValueChange} onValidate={this.handleErrors}/>
+                    <fieldset>
+                        <legend>Data</legend>
+                        <pre>{JSON.stringify(data || {}, null, 2)}</pre>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Schema</legend>
+                        <pre>{JSON.stringify(schema || {}, null, 2)}</pre>
+                    </fieldset>
+
+                </div>
+            </div>
         </div>
     }
 
 });
 
-React.render(<App/>, document.getElementById('content'))
+React.render(<App/>, document.getElementsByTagName('body')[0])

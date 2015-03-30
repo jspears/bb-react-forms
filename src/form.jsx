@@ -16,7 +16,7 @@ var Form = React.createClass({
         return <form {...props} onSubmit={this.handleSubmit}>
             {this.schema && this.schema.schema ? this.renderSchema() : null}
             {sb ?
-                <button type="submit"  dangerouslySetInnerHTML={{__html: sb}}/> : null}
+                <button type="submit"  className='btn btn-primary' dangerouslySetInnerHTML={{__html: sb}}/> : null}
 
         </form>
     }

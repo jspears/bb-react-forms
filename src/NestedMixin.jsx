@@ -123,6 +123,7 @@ var NestedMixin = {
             return <Editor ref={f} key={'key-' + f} path={path} value={value && value[f]}
                            field={ref}
                            errors={errors}
+                           parent={this}
                            template={template}
                            onValueChange={this.handleValueChange} onValidate={this.handleValidate}/>
         });
