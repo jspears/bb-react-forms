@@ -1,32 +1,39 @@
-require("style!css!less!bootstrap-webpack/bootstrap-styles!../bootstrap.config.js");
 var React = require('react');
 var Form = require('bb-react-forms').Form;
 var tu = require('../src/tutils');
-
+var Alert = require('react-bootstrap/lib/Alert');
+var Modal = require('react-bootstrap/lib/Modal');
+var ModalTrigger = require('react-bootstrap/lib/ModalTrigger');
+var Button = require('react-bootstrap/lib/Button');
+var MyModal = React.createClass({
+    render() {
+        return (
+            <Modal {...this.props} bsStyle='primary' title='Submit' animation={true}>
+                <div className='modal-body'>
+                    <h3>Errors</h3>
+                    {this.props.errors && Object.keys(this.props.errors).map((key)=> {
+                        return <div>
+                            <h4>{key}</h4>
+                            <ul>
+                                {this.props.errors[key].map((v)=> {
+                                    return <li>{v}</li>
+                                })}
+                            </ul>
+                        </div>
+                    })}
+                    <div>
+                        <h2>Values</h2>
+                        <pre>{JSON.stringify(this.props.value, void(0), 2)}}</pre>
+                    </div>
+                </div>
+                <div className='modal-footer'>
+                    <Button onClick={this.props.onRequestHide}>Close</Button>
+                </div>
+            </Modal>
+        );
+    }
+});
 var App = React.createClass({
-    /* getInitialState() {
-     return {
-     schema: JSON.stringify({
-     schema: {
-     title: {type: 'Select', options: ['Mr', 'Mrs', 'Ms']},
-     name: 'Text'/!*,
-     email: {validators: ['required', 'email']},
-     birthday: 'Date',
-     password: 'Password',
-     address: {type: 'NestedModel'},
-     notes: {type: 'List', itemType: 'Text'}*!/
-     },
-     fieldsets: [
-     {legend: 'Name', fields: ['title', 'name']}/!*, 'email', 'password']},
-     {legend: 'Birthday', fields: 'birthday'},
-     {legend: 'Other'}*!/
-     ],
-     submitButton: 'Save'
-     }),
-     data: {},
-     file: 'nested'
-     }
-     },*/
     getInitialState(){
         return {
             loadErrors: false,
@@ -96,6 +103,23 @@ var App = React.createClass({
             loadErrors: e.target.checked
         });
     },
+    handleSubmit(e, errors, value){
+        e && e.preventDefault();
+        this.setState({
+            alert: true,
+            submitErrors: errors,
+            submitValue: value
+        })
+    }
+    ,
+    hideModal(e, errors, value){
+        this.setState({
+            alert: false,
+            submitErrors: null,
+            submitValue: null
+
+        })
+    },
 
     render() {
         var value = JSON.stringify(this.state.output || this.state.data || {}, null, 2);
@@ -125,7 +149,9 @@ var App = React.createClass({
                 <div className="span10">
                     <Form schema={schema} value={data}
                           errors={ errors }
-                          onValueChange={this.handleValueChange} onValidate={this.handleErrors}/>
+                          onValueChange={this.handleValueChange}
+                          onSubmit={this.handleSubmit}
+                          onValidate={this.handleErrors}/>
                     <fieldset>
                         <legend>Data</legend>
                         <pre>{JSON.stringify(data || {}, null, 2)}</pre>
@@ -137,6 +163,9 @@ var App = React.createClass({
 
                 </div>
             </div>
+            { this.state.alert ? <MyModal ref="modal" onRequestHide={this.hideModal} errors={this.state.submitErrors}
+                                          value={this.state.submitValue}/> : null}
+
         </div>
     }
 

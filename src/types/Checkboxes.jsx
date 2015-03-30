@@ -67,7 +67,7 @@ var Checkboxes = React.createClass({
     _createGroup(option, index, group){
         return <fieldset className="group">
             <legend>{option.group}</legend>
-            {this.makeOptions(option.options, group == null ? 0 : group)}
+            <ul>{this.makeOptions(option.options, group == null ? 0 : group)}</ul>
         </fieldset>
 
     },

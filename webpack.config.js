@@ -43,7 +43,7 @@ module.exports = {
     },
     stats: {
         colors: true,
-        reasons: DEBUG
+        reasons: true
     },
     module: {
         loaders: [
