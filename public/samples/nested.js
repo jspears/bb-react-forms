@@ -28,6 +28,7 @@ module.exports = {
                 }
             }
         },
+        submitButton:'Submit',
         "fieldsets": [{
             "legend": "Name",
             "fields": ["title", "name", "email"]

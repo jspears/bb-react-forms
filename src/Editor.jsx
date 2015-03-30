@@ -84,7 +84,7 @@ var Editor = React.createClass({
      */
         validate(value){
         value = arguments.length === 0 ? this.getValue() : value;
-        var errors = this.getErrorMessages(this.getValue());
+        var errors = this.getErrorMessages(value);
         this.setState({
             message: errors && errors[0] && errors[0].message,
             hasValidated: true

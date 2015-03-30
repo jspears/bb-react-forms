@@ -19,7 +19,7 @@ var api = {
         return ret;
 
     },
-    flatten:Function.apply.bind(Array.prototype.concat, []),
+    flatten: Function.apply.bind(Array.prototype.concat, []),
     toArray: function (v) {
         if (Array.isArray(v)) {
             return v;
@@ -31,6 +31,17 @@ var api = {
             return [];
         }
         return [v];
+    },
+    xtend: function (dest, args) {
+        dest = dest || {};
+        for (var i = 1, l = arguments.length; i < l; i++) {
+            var arg = arguments[1];
+            if (arg == null) continue;
+            for (var j in arg) {
+                dest[j] = args[j];
+            }
+        }
+        return dest;
     },
     slice: Function.call.bind(Array.prototype.slice),
     debounce: function (fn, to) {
@@ -46,6 +57,9 @@ var api = {
     },
     nullCheck: function (v) {
         return v != null;
+    },
+    emptyCheck: function (v) {
+        return v != null && v.length > 0;
     }
 }
 module.exports = api;

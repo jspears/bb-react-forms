@@ -50,8 +50,40 @@ var NestedMixin = {
             return msg;
         }).filter(tu.nullCheck));
     },
-    triggerValidation(){
+    /**
+     * Return null if no validation errors,
+     * otherwise return a map of errors.
+     */
+        validate(){
+        var refs = this.refs, msgs = null;
+        Object.keys(refs).forEach((v) => {
+            var ref = refs[v], ers;
 
+            //So nested forms do their own validation.
+            if (ref.refs.field.validate) {
+                ers = ref.refs.field.validate();
+                if (ers == null) return null;
+                if (!msgs)msgs = {};
+                Object.keys(ers).forEach((v)=> {
+                    msgs[v] = ers[v];
+                });
+            } else {
+                //otherwise the editor does it.  I know wierd,
+                //open to suggestions.
+                ers = ref.validate();
+                if (ers == null || ers.length === 0) return null;
+                if (msgs == null) msgs = {};
+                msgs[ref.props.path] = ers;
+            }
+        });
+        return msgs;
+    },
+    getValue(){
+        var refs = this.refs, value = {};
+        Object.keys(refs).forEach((v) => {
+            value[v] = refs[v].getValue();
+        });
+        return value;
     },
     makeFields(fields) {
         var fieldMap = {}, {errors, value}  = this.props, schema = this.schema.schema, template = this.props.template;
