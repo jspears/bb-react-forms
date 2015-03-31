@@ -10,7 +10,8 @@ var CollectionMixin = {
         this.setState(this.wrap(newProps));
     },
     getItemEditorValue(){
-        return this.refs.itemEditor.getValue();
+        var value = this.refs.itemEditor.getValue();
+        return value;
     },
     getValue(){
         return this.unwrap(this.state.wrapped);
@@ -41,13 +42,13 @@ var CollectionMixin = {
             showAdd: false,
             showEdit: true,
             editPid: pid,
-            editValue: _.clone(val)
+            editValue: this.cloneVal(val)
         });
     },
 
     changeValue(newValue, oldValue) {
         var unwrapped = this.unwrap(newValue);
-        if (this.props.onValueChange(unwrapped, this.unwrap(oldValue), this.props.name) !== false) {
+        if (this.props.onValueChange(unwrapped, this.unwrap(oldValue), this.props.name, this.props.path) !== false) {
         }
 
         this.setState({
@@ -60,7 +61,7 @@ var CollectionMixin = {
     },
     handleAddBtn(e) {
         e && e.preventDefault();
-        this.setState({showAdd: true, editValue: this.createVal()});
+        this.setState({showAdd: true, editValue: null});
     },
     handleCancelAdd(e) {
         e && e.preventDefault();
@@ -106,16 +107,19 @@ var CollectionMixin = {
         } else {
             return null;
         }
+        var form = this.props.form;
+        var value = this.state.editValue || (this.state.editValue = {})
         return <div className="panel-body">
-            <Editor ref="itemEditor" field={this.getTemplateItem()} value={this.state.editValue}
-                    form={this.props.form}/>
+            <Editor ref="itemEditor" field={this.getTemplateItem()} value={value}
+                    pid={this.state.editPid}
+                    form={null}/>
             <button className="btn btn-primary pull-right" onClick={handler}>{label}</button>
             <button className="btn pull-left" onClick={this.handleCancelAdd}>Cancel</button>
         </div>
     },
     renderAddBtn() {
-        return <button className="btn btn-xs pull-right btn-default" onClick={this.handleAddBtn}><i
-            className="icon-add"/>Add</button>
+        return <div className="clearfix"><button className="btn btn-xs pull-right btn-default" onClick={this.handleAddBtn}><i
+            className="icon-add"/>Add</button></div>
     },
 
     renderAdd() {
@@ -124,14 +128,14 @@ var CollectionMixin = {
             return null;
         }
         var {showAdd, showEdit} = this.state;
-        return <div className="panel panel-default">
+        return showAdd || showEdit ? <div className="panel panel-default">
             <div className="panel-heading">
                 <h3 className={ 'panel-title clearfix '}>
-                    {showAdd ? 'Create' : showEdit ? 'Edit' : this.renderAddBtn() }
+                    {showAdd ? 'Create' : 'Edit'  }
                 </h3>
             </div>
             { this.renderAddEditTemplate(showEdit, showAdd) }
-        </div>
+        </div> : this.renderAddBtn();
     }
 }
 module.exports = CollectionMixin;

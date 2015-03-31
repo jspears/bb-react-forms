@@ -4,10 +4,10 @@ var PropsStateValueMixin = require('../PropsStateValueMixin');
 var tu = require('../tutils');
 
 var Checkboxes = React.createClass({
-    mixins: [PropsStateValueMixin],
+    // mixins: [PropsStateValueMixin],
     getDefaultProps() {
         return {
-            value: '',
+            value: [],
             title: '',
             name: '',
             placeholder: '',
@@ -19,16 +19,8 @@ var Checkboxes = React.createClass({
         }
 
     },
-    getValue(){
-        return this.state.value;
-    },
 
-    getInitialState() {
-        return {
-            value: this.props.value || []
-        }
-    },
-    getValues() {
+    getValue() {
         return Object.keys(this.refs).filter((v) => {
             return this.refs[v].checked;
         }).map((v)=> {
@@ -36,16 +28,13 @@ var Checkboxes = React.createClass({
         })
     },
     handleCheckChange(e){
-        var newValues = this.state.value ? this.state.value.concat() : [];
+        var newValues = this.props.value ? this.props.value.concat() : [];
         if (e.target.checked) {
             newValues.push(e.target.value);
         } else {
             newValues.splice(newValues.indexOf(e.target.value), 1);
         }
-        this.props.onValueChange(newValues, this.state.value, this.props.name);
-        this.setState({
-            value: newValues
-        });
+        this.props.onValueChange(newValues, this.props.value, this.props.name, this.props.path);
     },
 
 
@@ -54,7 +43,7 @@ var Checkboxes = React.createClass({
 
         var id = tu.path(this.props.path, index, group);
         var {val, labelHTML} = option;
-        var value = this.state.value || [];
+        var value = this.props.value || [];
         var labelContent = labelHTML ? <span dangerouslySetInnerHTML={{__html:labelHTML}}/> : val;
 
         return (<div className="checkbox">
@@ -89,7 +78,8 @@ var Checkboxes = React.createClass({
             option = tu.isString(option) ? {val: option} : option;
             console.log('key', name + '-' + index + '-' + option.val);
             return (
-                <div key={name+'-'+option.val+'-'+group}>{ option.group ? this._createGroup(option, index, group ? group++ : 0) : this._createCheckbox(option, index, group)}</div>)
+                <div
+                    key={name+'-'+option.val+'-'+group}>{ option.group ? this._createGroup(option, index, group ? group++ : 0) : this._createCheckbox(option, index, group)}</div>)
 
         });
     },

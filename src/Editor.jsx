@@ -24,6 +24,7 @@ function initValidators(v) {
 }
 
 var Editor = React.createClass({
+    displayName:'Editor',
     getInitialState() {
         return this._handleErrorObj(this.props);
     },
@@ -78,6 +79,7 @@ var Editor = React.createClass({
     getValue(){
         return this.refs.field.getValue();
     },
+
     /**
      * Runs validation and updates empty fields.
      *
@@ -91,9 +93,14 @@ var Editor = React.createClass({
         });
         return errors;
     },
+    getForm(){
+
+    },
     getErrorMessages(value){
         value = arguments.length === 0 ? this.getValue() : value;
-        var values = this.props.form.getValue();
+        var form = this.props.form ? this.props.form :  this.refs.field &&  this.refs.field.form;
+
+        var values = form && form.getValue();
         return this.validators.map((v)=> {
             return v(value, values);
         }).filter(tu.nullCheck);

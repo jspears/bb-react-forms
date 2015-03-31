@@ -31,11 +31,21 @@ var NestedMixin = {
         return ret;
     },
 
-    handleValueChange(newValue, oldValue, property) {
-        var value = this.props.value || {};
-        value[property] = newValue;
-        if (this.props.onValueChange(value, this.props.value, this.props.name) !== false) {
-//           this.props.value {value: value});
+    handleValueChange(newValue, oldValue, property, path) {
+
+        if (this.props.onValueChange(newValue, oldValue, property, path) !== false) {
+            if (this.form === this) {
+                this.setValue(path, newValue, this.props.value);
+            }
+        }
+    },
+    setValue(path, newValue, value){
+        var parts = path.split('.', 2), key = parts[0], rest = parts[1];
+        if (rest != null) {
+            value = value[key] == null ? (value[key] = {}) : value[key];
+            this.refs[key].refs.field.setValue(rest, newValue, value);
+        } else {
+            value[path] = newValue;
         }
     },
     handleValidate(){
@@ -144,6 +154,8 @@ var NestedMixin = {
     renderSchema(form) {
         if (form) {
             this.form = form;
+        }else{
+            this.form = this;
         }
         var schema = this.schema, fieldsets = schema.fieldsets, fields = schema.fields || Object.keys(schema.schema);
         return (fieldsets && Array.isArray(fieldsets) ? fieldsets : ( fieldsets && (fieldsets.legend || fieldsets.fields) ) ? [fieldsets] : [{fields: tu.toArray(fields)}])

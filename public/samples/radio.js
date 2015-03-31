@@ -25,7 +25,7 @@ module.exports = {
             radioWithLabel: {
                 options:  [
                     {
-                        labelHTML: '<b class=>HTML</b>'
+                        labelHTML: '<b>HTML</b>'
                     }
                 ],
                 type: 'Radio'

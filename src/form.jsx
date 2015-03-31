@@ -3,6 +3,7 @@ var NestedMixin = require('./NestedMixin.jsx');
 
 
 var Form = React.createClass({
+    displayName:'Form',
     mixins: [NestedMixin],
     handleSubmit(e){
         e && e.preventDefault();

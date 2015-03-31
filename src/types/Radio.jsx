@@ -1,5 +1,4 @@
 var React = require('react');
-var PropsStateValueMixin = require('../PropsStateValueMixin.js');
 var tu = require('../tutils');
 
 var RadioItem = React.createClass({
@@ -22,7 +21,6 @@ var RadioItem = React.createClass({
 });
 
 var RadioInput = React.createClass({
-    mixins: [PropsStateValueMixin],
     getDefaultProps() {
         return {
             value: '',
@@ -39,20 +37,12 @@ var RadioInput = React.createClass({
 
     },
     getValue(){
-        return this.state.value;
+        return this.props.value;
     },
 
-    getInitialState() {
-        return {
-            value: this.props.value
-        }
-    },
 
     handleCheckChange(e){
-        this.props.onValueChange(e.target.value, this.state.value, this.props.name);
-        this.setState({
-            value: e.target.value
-        });
+        this.props.onValueChange(e.target.value, this.props.value, this.props.name, this.props.path);
     },
 
     /**
@@ -68,14 +58,14 @@ var RadioInput = React.createClass({
 
     render()
     {
-        var {name,template,path, field} = this.props, value = '' + (this.state.value == null ? '' : this.state.value);
+        var {name,template,path, field, value} = this.props;
         var RadioItemTemplate = template || RadioItem;
         return (<ul>{field.options.map((option, index)=> {
             option = tu.isString(option) ? {label: option, val: option} : option;
             if (!('val' in option)) {
-                option.val = index;
+                option.val = option.label || index;
             }
-            var key = '' + name + option.val;
+            var key = '' + name + option.val, checked = '' + value === '' + option.val;
             console.log('key', key);
             return <RadioItemTemplate key={key}
                                       id={tu.path(path,index)}
@@ -83,7 +73,7 @@ var RadioInput = React.createClass({
                                       val={option.val}
                                       label={option.label}
                                       labelHTML={option.labelHTML}
-                                      checked={value === ''+option.val}
+                                      checked={checked}
                                       handleChange={this.handleCheckChange}/>
 
 

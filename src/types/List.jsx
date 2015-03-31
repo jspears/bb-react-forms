@@ -20,30 +20,58 @@ var ListInput = React.createClass({
             itemTemplate: require('./ListItemTemplate.jsx')
         }
     },
+    /*
+     extractValue(v) {
+     return v.value;
+     },
+     wrap(prop){
+     return {wrapped: prop && prop.value && prop.value.map(this.toValues) || []};
+     },
+     toValues(value, id) {
+     return {
+     id, value
+     }
+     },
+     */
+    unwrap(value) {
+        var ret = (value || []).map(function (v, i) {
+            return v && v.value && v.value.value;
+        });
+        return ret;
+    },
 
-    extractValue(v) {
-        return v.value;
-    },
     wrap(prop){
-        return {wrapped: prop && prop.value && prop.value.map(this.toValues) || []};
-    },
-    toValues(value, id) {
+        var value = prop && prop.value || [];
+        var wrapped = value.map(function (v, k) {
+            return {
+                id: k,
+                value: {
+                    value: value[k]
+                }
+            }
+        });
         return {
-            id, value
+            wrapped
+        };
+    },
+    cloneVal(val){
+        return {
+            value: _.clone(val)
         }
     },
-    createVal(){
-        return null;
-    },
-    cloneVal(pos, val){
-      return _.clone(val)
-    },
-    unwrap:function(value){
-      if (value == null) return [];
-      return value.map(this.extractValue);
-    },
+    /* unwrap:function(value){
+     if (value == null) return [];
+     return value.map(this.extractValue);
+     },*/
     getTemplateItem(){
-        return this._item;
+        return {
+            type: 'Object',
+            name: this.props.field.name,
+            subSchema: {
+                value: this.props.field.itemType || this.props.itemType
+            },
+            fields: ['value']
+        };
     },
     render() {
         var {name, itemTemplate, itemType, errors, path,field} = this.props, item = (!itemType || _.isString(itemType)) ? {
@@ -56,7 +84,7 @@ var ListInput = React.createClass({
         this._item = item;
         return (<div className="list-editor">
             {this.renderAdd()}
-            <ul className="edit-list bbf-list list-group">
+            <ul className="edit-list list-group">
                 {values.map((v, i) => {
                     return <ListItemTemplate key={'li-' + name + '-' + v.id} pos={i} path={tu.path(path,v.id)}
                                              onMoveUp={this.handleMoveUp}
@@ -64,7 +92,7 @@ var ListInput = React.createClass({
                                              onEdit={this.handleEdit}
                                              field={item}
                                              pid={v.id}
-                                             value={v.value} errors={errors} last={i + 1 === length}/>
+                                             value={v.value.value} errors={errors} last={i + 1 === length}/>
                 })}
             </ul>
         </div>);

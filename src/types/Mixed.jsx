@@ -62,21 +62,21 @@ var MixedInput = React.createClass({
         }
         return null;
     },
-    createVal(){
-        return {};
-    },
     cloneVal(pos, val, pid){
-        return {
-            key: pid,
-            value: _.clone(val)
-        };
+        return  _.clone(val)
+
     },
     uniqueCheck(value){
         var values = this.getValue();
+        if (this.state.editPid == value) {
+            return null;
+        }
         if (value in values) {
+
             return {
                 message: 'Keys must be unique'
             }
+
         }
         return null;
     },

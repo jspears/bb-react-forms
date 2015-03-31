@@ -18,29 +18,20 @@ var FieldMixin = {
     dataType: 'text',
 
     getValue(){
-        return this.state.value;
+        return this.props.value;
     },
 
-    getInitialState() {
-        return {
-            value: this.props.value
-        }
-    },
     valueFromEvt(e){
         return e.target.value;
     },
     handleChange(e) {
         var value = this.valueFromEvt(e);
-        this.props.onValueChange(value, this.state.value, this.props.name, this.props.path);
-        this.setState({
-            value: value
-        });
-
+        this.props.onValueChange(value, this.props.value, this.props.name, this.props.path);
     },
     handleValidate(e){
-        this.props.onValidate(this.valueFromEvt(e), this.state.value, this.props.name, this.props.path);
+        this.props.onValidate(this.valueFromEvt(e), this.props.value, this.props.name, this.props.path);
     }
-    //,componentWillReceiveProps:PropsStateValueMixin.componentWillReceiveProps
+
 };
 
 module.exports = FieldMixin;

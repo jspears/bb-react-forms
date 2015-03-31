@@ -6,6 +6,7 @@ var NestedMixin = require('../NestedMixin.jsx');
 
 var ObjectInput = React.createClass({
     mixins: [NestedMixin],
+    displayName:'ObjectInput',
     render() {
 
         var {field, ...props} = this.props;
