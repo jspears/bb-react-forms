@@ -1,19 +1,12 @@
 var React = require('react');
 
-var Editor = require('../Editor.jsx');
-var _ = require('lodash');
 
-var PropsStateValueMixin = require('../PropsStateValueMixin');
-function extractValue(v) {
-    return v.value;
-}
-function toValues(value, id) {
-    return {
-        id, value
-    }
-}
+var _ = require('lodash');
+var tu = require('../tutils');
+var CollectionMixin = require('./CollectionMixin.jsx');
 
 var ListInput = React.createClass({
+    mixins: [CollectionMixin],
     getDefaultProps() {
         return {
             value: [],
@@ -27,130 +20,32 @@ var ListInput = React.createClass({
             itemTemplate: require('./ListItemTemplate.jsx')
         }
     },
-    getInitialState() {
-        return this._wrapValues(this.props);
-    },
-    componentWillReceiveProps: function (newProps) {
-        this.setState(this._wrapValues(newProps));
-    },
-    _wrapValues(prop){
-        return {wrapped: prop && prop.value && prop.value.map(toValues) || []};
-    },
-    handleMoveUp(pos, val) {
-        console.log('move-up', arguments);
-        var values = this.state.wrapped, oval = values && values.concat();
-        values.splice(Math.max(pos - 1, 0), 0, values.splice(pos, 1)[0]);
-        this.changeValue(values, oval);
-    },
-    handleMoveDown(pos, val) {
-        console.log('move-down', arguments);
-        var values = this.state.wrapped, oval = values && values.concat();
-        values.splice(Math.min(pos + 1, values.length), 0, values.splice(pos, 1)[0]);
-        this.changeValue(values, oval);
 
+    extractValue(v) {
+        return v.value;
     },
-    handleDelete(pos, val, pid) {
-        console.log('delete', arguments);
-        var values = this.state.wrapped, oval = values && values.concat();
-        values.splice(pos, 1);
-        this.changeValue(values, oval);
+    wrap(prop){
+        return {wrapped: prop && prop.value && prop.value.map(this.toValues) || []};
     },
-    handleEdit(pos, val, pid) {
-        console.log('delete', arguments);
-        this._editId = pid;
-        this._newValue = _.clone(val);
-        this.setState({
-            showAdd: false,
-            showEdit: true
-        });
-    },
-    changeValue(newValue, oldValue) {
-        var unwrapped = newValue.map(extractValue);
-        if (this.props.onValueChange(unwrapped, oldValue && oldValue.map(extractValue), this.props.name) !== false) {
+    toValues(value, id) {
+        return {
+            id, value
         }
-        this.props.value = unwrapped;
-        this.setState({
-            wrapped: newValue,
-            showAdd: false,
-            showEdit: false
-        });
     },
-    handleAddBtn(e) {
-        e && e.preventDefault();
-        this._newValue = this._editId = null;
-        this.setState({showAdd: true});
+    createVal(){
+        return null;
     },
-    handleCancelAdd(e) {
-        e && e.preventDefault();
-        this.setState({showAdd: false, showEdit: false});
-        this._newValue = this._editId = null;
+    cloneVal(pos, val){
+      return _.clone(val)
     },
-    handleAddValue(e) {
-        e && e.preventDefault();
-        this.addValue(this._newValue);
-        this._newValue = this._editId = null;
+    unwrap:function(value){
+      if (value == null) return [];
+      return value.map(this.extractValue);
     },
-    handleEditValue(e) {
-        e && e.preventDefault();
-        var value = this.state.wrapped || [], ov = this._editId, nv = this._newValue, pos = 0;
-        value.some(function (v, i) {
-            if (v.id === ov) {
-                pos = i;
-                v.value = nv;
-                return true;
-            }
-        });
-        this.changeValue(value);
-
+    getTemplateItem(){
+        return this._item;
     },
-
-    addValue(newValue) {
-        var values = this.state.wrapped || [], oval = values && values.concat();
-        values.push(toValues(newValue, values.length));
-        this.changeValue(values, oval);
-
-    },
-    updateNewValue(v) {
-        this._newValue = v;
-    },
-    getValue(){
-        return this.state.wrapped.map(extractValue);
-    },
-    renderAddTemplate() {
-        var newField = this._item;
-        return <div>
-            <Editor field={newField} value={this._newValue} name="newValue" onValueChange={this.updateNewValue} parent={this}/>
-            <button className="btn btn-primary pull-right" onClick={this.handleAddValue}>Add</button>
-            <button className="btn pull-left" onClick={this.handleCancelAdd}>Cancel</button>
-        </div>
-    },
-    renderEditTemplate() {
-        return <div>
-            <Editor field={this._item} value={this._newValue} onValueChange={this.updateNewValue} parent={this}/>
-            <button className="btn btn-primary  pull-right" onClick={this.handleEditValue}>Save</button>
-            <button className="btn pull-left" onClick={this.handleCancelAdd}>Cancel</button>
-        </div>
-    },
-    renderAddBtn() {
-        return <button className="button pull-right" onClick={this.handleAddBtn}>
-            <i className="icon-add"/>
-            Add</button>
-    },
-
-    renderAdd() {
-        var field = this.props.field;
-        if (!field.canAdd) {
-            return null;
-        }
-        return <div className="panel panel-default">
-            <div
-                className="panel-body">{this.state.showAdd ? this.renderAddTemplate() : this.state.showEdit ? this.renderEditTemplate() : this.renderAddBtn()}</div>
-        </div>
-
-    },
-
     render() {
-        console.log('render');
         var {name, itemTemplate, itemType, errors, path,field} = this.props, item = (!itemType || _.isString(itemType)) ? {
             type: itemType || 'Text',
             name: name
@@ -163,7 +58,7 @@ var ListInput = React.createClass({
             {this.renderAdd()}
             <ul className="edit-list bbf-list list-group">
                 {values.map((v, i) => {
-                    return <ListItemTemplate key={'li-' + name + '-' + v.id} pos={i} path={path}
+                    return <ListItemTemplate key={'li-' + name + '-' + v.id} pos={i} path={tu.path(path,v.id)}
                                              onMoveUp={this.handleMoveUp}
                                              onMoveDown={this.handleMoveDown} onDelete={this.handleDelete}
                                              onEdit={this.handleEdit}

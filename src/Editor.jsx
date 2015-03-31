@@ -93,7 +93,7 @@ var Editor = React.createClass({
     },
     getErrorMessages(value){
         value = arguments.length === 0 ? this.getValue() : value;
-        var values = this.props.parent.getValue();
+        var values = this.props.form.getValue();
         return this.validators.map((v)=> {
             return v(value, values);
         }).filter(tu.nullCheck);
@@ -123,7 +123,7 @@ var Editor = React.createClass({
             {title ? <label className="col-sm-2 control-label" htmlFor={name}>{title}</label> : null}
 
             <div className="col-sm-10">
-                <Component ref="field" value={value} {...props} field={field} name={name}
+                <Component ref="field" value={value} {...props} field={field} name={name} form={this.props.form}
                            onValueChange={this.handleChange}
                            onValidate={this.handleValidate}/>
 

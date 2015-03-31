@@ -65,8 +65,7 @@ module.exports = {
             },
             {
                 test: /\.less$/,
-                loader: 'style-loader!css-loader!' + AUTOPREFIXER_LOADER +
-                '!less-loader'
+                loader: 'style!css!less-loader'
             },
         ]
     },

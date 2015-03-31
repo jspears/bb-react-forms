@@ -39,8 +39,8 @@ var FieldMixin = {
     },
     handleValidate(e){
         this.props.onValidate(this.valueFromEvt(e), this.state.value, this.props.name, this.props.path);
-    },
-    componentWillReceiveProps:PropsStateValueMixin.componentWillReceiveProps
+    }
+    //,componentWillReceiveProps:PropsStateValueMixin.componentWillReceiveProps
 };
 
 module.exports = FieldMixin;

@@ -8,12 +8,16 @@ var RadioItem = React.createClass({
         var {val, label, labelHTML, id, name, checked, handleChange} = this.props;
 
 
-        var labelOut = labelHTML ? <label htmlFor={id} dangerouslySetInnerHTML={{__html:labelHTML}}/> :
-            <label htmlFor={id}>{label}</label>;
+        label = labelHTML ? <span htmlFor={id} dangerouslySetInnerHTML={{__html:labelHTML}}/> : label;
 
-        return <li><input checked={checked} type="radio"
-                          name={name} id={id} value={val}
-                          onChange={handleChange}/>{labelOut}</li>;
+        return (<div className="radio">
+            <label htmlFor={id}>
+                <input checked={checked} type="radio"
+                       name={name} id={id} value={val}
+                       onChange={handleChange}/>
+                {label}
+            </label>
+        </div>);
     }
 });
 

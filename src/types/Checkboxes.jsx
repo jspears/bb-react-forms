@@ -55,19 +55,22 @@ var Checkboxes = React.createClass({
         var id = tu.path(this.props.path, index, group);
         var {val, labelHTML} = option;
         var value = this.state.value || [];
-        var label = labelHTML ? <label htmlFor={id} dangerouslySetInnerHTML={{__html:labelHTML}}/> :
-            <label htmlFor={id}>{val}</label>;
+        var labelContent = labelHTML ? <span dangerouslySetInnerHTML={{__html:labelHTML}}/> : val;
 
-        return [<input ref={id.replace(/\./g, '_')} checked={!!~value.indexOf(val)} type="checkbox"
+        return (<div className="checkbox">
+            <label>
+                <input ref={id.replace(/\./g, '_')} checked={!!~value.indexOf(val)} type="checkbox"
                        name={this.props.field.name} id={id} value={val}
-                       onChange={this.handleCheckChange}/>,
-            label];
+                       onChange={this.handleCheckChange}/>
+                {labelContent}
+            </label>
+        </div>);
 
     },
     _createGroup(option, index, group){
         return <fieldset className="group">
             <legend>{option.group}</legend>
-            <ul>{this.makeOptions(option.options, group == null ? 0 : group)}</ul>
+            {this.makeOptions(option.options, group == null ? 0 : group)}
         </fieldset>
 
     },
@@ -86,7 +89,7 @@ var Checkboxes = React.createClass({
             option = tu.isString(option) ? {val: option} : option;
             console.log('key', name + '-' + index + '-' + option.val);
             return (
-                <li key={name+'-'+option.val+'-'+group}>{ option.group ? this._createGroup(option, index, group ? group++ : 0) : this._createCheckbox(option, index, group)}</li>)
+                <div key={name+'-'+option.val+'-'+group}>{ option.group ? this._createGroup(option, index, group ? group++ : 0) : this._createCheckbox(option, index, group)}</div>)
 
         });
     },
@@ -94,7 +97,7 @@ var Checkboxes = React.createClass({
     render()
     {
 
-        return (<ul>{this.makeOptions(this.props.field.options, 1)}</ul>)
+        return <div>{this.makeOptions(this.props.field.options, 1)}</div>
     }
 });
 

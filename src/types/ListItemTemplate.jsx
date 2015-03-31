@@ -41,24 +41,26 @@ var ListItemTemplate = React.createClass({
         this.props.onEdit(this.props.pos, this.props.value, this.props.pid);
     },
     render() {
-        var {pos, field, value, onValidate, last, onValueChange} = this.props;
+        var {pos, field, value, errors, path, onValidate, last, onValueChange} = this.props;
         var {type, name, canReorder, canDelete} = field;
         var Component = require('./' + type + '.jsx');
-        return <li className="list-group-item">
+        var error = errors && errors[path];
+        var btnCls='btn btn-xs btn-default'
+        return <li className={'list-group-item '+(error ? 'has-error' : '')}>
             <span className="item-value" onClick={field.canEdit ? this.handleEdit : null}
                   path={tpath(this.props.path, this.props.pos)}
-                  dangerouslySetInnerHTML={{__html: this.props.itemToString(value)}}></span>
-
+                 >{this.props.itemToString(value)}</span>
+            { error ? <p className="help-block">{error}</p> : null }
             <div className="btn-group  pull-right">
-                {canReorder && pos > 0 ? <button onClick={this.handleMoveUp} className='btn'
-                                      title="Move Up">
+                {canReorder && pos > 0 ? <button onClick={this.handleMoveUp} className={btnCls}
+                                                 title="Move Up">
                     <i className='glyphicon glyphicon-chevron-up'/>
                 </button> : null }
-                {canReorder && !last ? <button onClick={this.handleMoveDown} className='btn'
-                                      title="Move Down">
+                {canReorder && !last ? <button onClick={this.handleMoveDown} className={btnCls}
+                                               title="Move Down">
                     <i className='glyphicon glyphicon-chevron-down'/>
                 </button> : null }
-                { canDelete ? <button onClick={this.handleDelete} className='btn' title="Delete">
+                { canDelete ? <button onClick={this.handleDelete} className={btnCls} title="Delete">
                     <i
                         className='glyphicon glyphicon-remove'/>
                 </button> : null}

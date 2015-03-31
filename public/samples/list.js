@@ -16,6 +16,11 @@ module.exports = {
     },
     data: {
         todos: ['Get Stuff', 'Do Stuff', 'Go Home']
+    },
+    errors:{
+        'todos.1':{
+            message:'No your not going to'
+        }
     }
 }
 ;

@@ -11,7 +11,8 @@ var NestedMixin = {
 
             },
             onValidate(){
-            }
+            },
+            form: null
         }
 
     },
@@ -24,9 +25,9 @@ var NestedMixin = {
         var ret = f.legend ?
             <fieldset key={'f' + i}>
                 <legend>{f.legend}</legend>
-                {this.makeFields(f.fields)}
+                {this.makeFields(f.fields).map(this.addEditor, this)}
             </fieldset> :
-            <div key={'f' + i}>{this.makeFields(f.fields)}</div>
+            <div key={'f' + i}>{this.makeFields(f.fields).map(this.addEditor, this)}</div>
         return ret;
     },
 
@@ -85,8 +86,19 @@ var NestedMixin = {
         });
         return value;
     },
+    addEditor(field){
+        var f = field.name;
+        var {path, value} = this.props;
+        return <Editor ref={f} key={'key-' + f} path={tu.path(path, f)} value={value && value[f]}
+                       field={field}
+                       errors={this.props.errors}
+                       form={this.form}
+                       template={field.template}
+                       onValueChange={this.handleValueChange} onValidate={this.handleValidate}/>
+    },
     makeFields(fields) {
-        var fieldMap = {}, {errors, value}  = this.props, schema = this.schema.schema, template = this.props.template;
+        var fieldMap = {}, schema = this.schema.schema, template = this.props.template;
+
         fields = tu.toArray(fields).map((v) => {
             return v.split('.', 2);
         }).map((v) => {
@@ -102,35 +114,37 @@ var NestedMixin = {
             return schema[f];
         }).map((f) => {
 
-            var ref = schema[f], path = tpath(this.props.path, f);
+            var ref = _.isString(f) ? schema[f] : f;
             if (tu.isString(ref)) {
                 ref = {
                     name: f,
-                    type: ref
+                    type: ref,
+                    template: template
                 }
             } else {
-                if (!ref.name) {
-                    ref.name = f;
-                }
                 if (!ref.type) {
                     ref.type = 'Text';
                 }
+                if (!ref.name) {
+                    ref.name = f;
+                }
+                if (!ref.template) {
+                    ref.template = template;
+                }
+
             }
             if (!ref.fields && fieldMap[f]) {
                 ref.fields = fieldMap[f];
             }
-            ref._property = f;
-            return <Editor ref={f} key={'key-' + f} path={path} value={value && value[f]}
-                           field={ref}
-                           errors={errors}
-                           parent={this}
-                           template={template}
-                           onValueChange={this.handleValueChange} onValidate={this.handleValidate}/>
-        });
+            return ref;
+        })
     },
 
 
-    renderSchema() {
+    renderSchema(form) {
+        if (form) {
+            this.form = form;
+        }
         var schema = this.schema, fieldsets = schema.fieldsets, fields = schema.fields || Object.keys(schema.schema);
         return (fieldsets && Array.isArray(fieldsets) ? fieldsets : ( fieldsets && (fieldsets.legend || fieldsets.fields) ) ? [fieldsets] : [{fields: tu.toArray(fields)}])
             .map(this.makeFieldset, this);

@@ -5,6 +5,7 @@ var Alert = require('react-bootstrap/lib/Alert');
 var Modal = require('react-bootstrap/lib/Modal');
 var ModalTrigger = require('react-bootstrap/lib/ModalTrigger');
 var Button = require('react-bootstrap/lib/Button');
+require('./index.less');
 var MyModal = React.createClass({
     render() {
         return (
@@ -39,7 +40,8 @@ var App = React.createClass({
             loadErrors: false,
             loadData: false,
             data: {},
-            errors: {}
+            errors: {},
+            file: 'list'
         }
     },
     parse: tu.debounce(function (value) {
@@ -81,7 +83,7 @@ var App = React.createClass({
 
     componentWillMount() {
         //  this.parse(this.state.value);
-        this.loadFile('list');
+        this.loadFile(this.state.file);
     },
     handleValueChange(value){
         this.setState({output: value});
@@ -132,6 +134,7 @@ var App = React.createClass({
                     <select onChange={this.changeFile} value={this.state.file}>
                         <option value="none">None Selected</option>
                         <option value="login">Login</option>
+                        <option value="mixed">Mixed</option>
                         <option value="checkboxes">Checkboxes</option>
                         <option value="radio">Radio</option>
                         <option value="nested">Nested</option>
@@ -147,11 +150,17 @@ var App = React.createClass({
                     </label>
                 </div>
                 <div className="span10">
-                    <Form schema={schema} value={data}
-                          errors={ errors }
-                          onValueChange={this.handleValueChange}
-                          onSubmit={this.handleSubmit}
-                          onValidate={this.handleErrors}/>
+                    <div className="container-fluid">
+                        <div className="row-fluid">
+                            <div className="span12">
+                                <Form schema={schema} value={data}
+                                      errors={ errors }
+                                      onValueChange={this.handleValueChange}
+                                      onSubmit={this.handleSubmit}
+                                      onValidate={this.handleErrors}/>
+                            </div>
+                        </div>
+                    </div>
                     <fieldset>
                         <legend>Data</legend>
                         <pre>{JSON.stringify(data || {}, null, 2)}</pre>
