@@ -6,8 +6,7 @@ var TextInput = React.createClass({
     render() {
         return <input id={this.props.name}
                       className="form-control" type="hidden" value={this.props.value}
-                      data-path={this.props.path}
-                      title={this.props.title} placeholder={this.props.placeholder}/>
+                      data-path={this.props.path}/>
     }
 });
 

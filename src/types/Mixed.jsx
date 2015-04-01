@@ -62,7 +62,7 @@ var MixedInput = React.createClass({
         }
         return null;
     },
-    cloneVal(pos, val, pid){
+    cloneVal(val){
         return  _.clone(val)
 
     },

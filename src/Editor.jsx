@@ -3,7 +3,7 @@ var tu = require('./tutils');
 var EMPTY_OBJ = {};
 var EMPTY_ARR = [];
 var validators = require('./validators');
-
+var EditorTemplate = require('./templates/EditorTemplate.jsx');
 function initValidators(v) {
     //If it has a type init it
     if (v.type) {
@@ -23,8 +23,9 @@ function initValidators(v) {
     return validators[v]();
 }
 
+
 var Editor = React.createClass({
-    displayName:'Editor',
+    displayName: 'Editor',
     getInitialState() {
         return this._handleErrorObj(this.props);
     },
@@ -36,7 +37,8 @@ var Editor = React.createClass({
             onValueChange() {
             },
             onValidate() {
-            }
+            },
+            editorTemplate:EditorTemplate
 
         }
     },
@@ -48,7 +50,7 @@ var Editor = React.createClass({
         }
     },
     componentWillReceiveProps(newProps) {
-    //    this.setState(this._handleErrorObj(newProps));
+     //   this.setState(this._handleErrorObj(newProps));
     },
     componentWillMount(){
         var validators = this.props.field.validators;
@@ -93,12 +95,10 @@ var Editor = React.createClass({
         });
         return errors;
     },
-    getForm(){
 
-    },
     getErrorMessages(value){
         value = arguments.length === 0 ? this.getValue() : value;
-        var form = this.props.form ? this.props.form :  this.refs.field &&  this.refs.field.form;
+        var form = this.props.form ? this.props.form : this.refs.field && this.refs.field.form;
 
         var values = form && form.getValue();
         return this.validators.map((v)=> {
@@ -118,25 +118,27 @@ var Editor = React.createClass({
         });
     },
     render() {
-        var {field, name, value, onValueChange, onValidate, ...props} = this.props,
+        var {field, name, value, onValueChange, editorTemplate, onValidate, ...props} = this.props,
             {name,type,fieldClass, errorClassName, help} = field,
             errMessage = this.state.message,
             Component = require('types/' + type + '.jsx'),
             title = this.title(),
             errorClassName = errorClassName == null ? 'has-error' : errorClassName;
+        var EditorTemplate = editorTemplate || this.props.editorTemplate;
+        if (editorTemplate == false || type === 'Hidden') {
+            EditorTemplate = null;
+        }
+        //errMessage, errorClassName, name, fieldClass, title, help
+        return EditorTemplate ? <EditorTemplate name={name} fieldClass={fieldClass} title={title} help={help}
+                                                errorClassName={errorClassName} message={errMessage}>
+            <Component ref="field" value={value} {...props} field={field} name={name} form={this.props.form}
+                       onValueChange={this.handleChange}
+                       onValidate={this.handleValidate}/>
+        </EditorTemplate> :
+            <Component ref="field" value={value} {...props} field={field} name={name} form={this.props.form}
+                       onValueChange={this.handleChange}
+                       onValidate={this.handleValidate}/>;
 
-        return <div
-            className={"form-group field-name " + (errMessage != null ? errorClassName : '') + ' ' + fieldClass}>
-            {title ? <label className="col-sm-2 control-label" htmlFor={name}>{title}</label> : null}
-
-            <div className="col-sm-10">
-                <Component ref="field" value={value} {...props} field={field} name={name} form={this.props.form}
-                           onValueChange={this.handleChange}
-                           onValidate={this.handleValidate}/>
-
-                <p className="help-block">{errMessage || help || ''}</p>
-            </div>
-        </div>
     }
 });
 module.exports = Editor;
