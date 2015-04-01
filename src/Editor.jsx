@@ -26,9 +26,7 @@ function initValidators(v) {
 
 var Editor = React.createClass({
     displayName: 'Editor',
-    getInitialState() {
-        return this._handleErrorObj(this.props);
-    },
+
     getDefaultProps() {
         return {
             field: {
@@ -42,22 +40,13 @@ var Editor = React.createClass({
 
         }
     },
-    _handleErrorObj(props){
-        var {errors, path} = props;
-        var e = (errors && errors[path] || EMPTY_OBJ).message;
-        return {
-            message: e
-        }
-    },
-    componentWillReceiveProps(newProps) {
-        //   this.setState(this._handleErrorObj(newProps));
-    },
+
     componentWillMount(){
         var validators = this.props.field.validators;
         this.validators = validators ? validators.map(initValidators) : EMPTY_ARR;
     },
     handleValidate(newValue, oldValue, path) {
-        this.validate(newValue)
+        this.validate(newValue, oldValue, path);
     },
     handleChange(newValue, oldValue, path) {
         var errors = this.getErrorMessages(newValue), isValid = errors.length === 0;
@@ -70,10 +59,9 @@ var Editor = React.createClass({
         } else if (!hasValidated && isValid) {
             hasValidated = true;
         }
-        var message = errors && errors[0] && errors[0].message;
 
         this.setState({
-            hasValidated, message
+            hasValidated
         });
 
 
@@ -89,10 +77,11 @@ var Editor = React.createClass({
         validate(value){
         value = arguments.length === 0 ? this.getValue() : value;
         var errors = this.getErrorMessages(value);
-        this.setState({
-            message: errors && errors[0] && errors[0].message,
-            hasValidated: true
-        });
+        if (this.props.onValidate(errors, value, this.props.value, this.props.name, this.props.path) !== false) {
+            this.setState({
+                hasValidated: true
+            });
+        }
         return errors;
     },
 
@@ -118,26 +107,29 @@ var Editor = React.createClass({
         });
     },
     render() {
-        var {field, name, value, onValueChange,  template,onValidate, ...props} = this.props,
+        var {field, name, value, errors, path, onValueChange,  template,onValidate, ...props} = this.props,
             {name,type,fieldClass, errorClassName, help} = field,
-            errMessage = this.state.message,
+            err = errors && errors[path] && errors[path][0] && errors[path],
+            errMessage = err && err[0].message,
             Component = require('types/' + type + '.jsx'),
             title = this.title(),
             errorClassName = errorClassName == null ? 'has-error' : errorClassName;
         var Template = template;
         if (template === false || field.template === false || type === 'Hidden') {
             Template = null;
-        }else{
+        } else {
             Template = EditorTemplate;
         }
         //errMessage, errorClassName, name, fieldClass, title, help
         return Template ? <Template name={name} fieldClass={fieldClass} title={title} help={help}
-                                                errorClassName={errorClassName} message={errMessage}>
+                                    errorClassName={errorClassName} message={errMessage}>
             <Component ref="field" value={value} {...props} field={field} name={name} form={this.props.form}
+                       error={err}
                        onValueChange={this.handleChange}
                        onValidate={this.handleValidate}/>
         </Template> :
             <Component ref="field" value={value} {...props} field={field} name={name} form={this.props.form}
+                       error={err}
                        onValueChange={this.handleChange}
                        onValidate={this.handleValidate}/>;
 

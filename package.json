@@ -4,9 +4,10 @@
   "description": "Backbone Forms like declaritive forms for react",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "karma start",
     "start": "webpack-dev-server --content-base ./public/",
-    "package": "webpack --config webpack.config.js -p"
+    "package": "webpack --config webpack.config.js -p",
+    "karma":"karma start --no-single-run --colors --auto-watch"
   },
   "keywords": [
     "react",
@@ -18,7 +19,15 @@
   "devDependencies": {
     "babel-core": "^4.7.16",
     "babel-loader": "^4.2.0",
+    "expect": "^1.6.0",
     "express": "^4.12.3",
+    "karma": "^0.12.31",
+    "karma-chrome-launcher": "^0.1.7",
+    "karma-cli": "0.0.4",
+    "karma-mocha": "^0.1.10",
+    "karma-sourcemap-loader": "^0.3.4",
+    "karma-webpack": "^1.5.0",
+    "mocha": "^2.2.1",
     "react": "^0.13.1",
     "react-bootstrap": "^0.20.0",
     "webpack": "^1.7.3",

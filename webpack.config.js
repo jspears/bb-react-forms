@@ -1,27 +1,6 @@
-var fs = require('fs');
 var path = require('path');
 
-/*
- function isDirectory(dir) {
- return fs.lstatSync(dir).isDirectory();
- }
- var entry = fs.readdirSync(path.join('.', 'src')).reduce(function (entries, dir) {
- var isDraft = dir.charAt(0) === '_';
 
- if (!isDraft && isDirectory(path.join('./src', dir)))
- entries[dir] = path.join(__dirname, dir, 'index.js');
-
- return entries;
- }, {
- app: './public/app.jsx'
- });
- console.log(entry);*/
-var entry = {
-
-    app: './public/app.jsx'
-  //  types: './src/types',
-  //  styles: './src/styles'
-}
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 var webpack = require('webpack');
@@ -33,7 +12,9 @@ module.exports = {
 
     devtool: 'inline-source-map',
 
-    entry: entry,
+    entry: {
+        app: './public/app.jsx'
+    },
 
     output: {
         path: '.build/',
@@ -48,7 +29,7 @@ module.exports = {
     module: {
         loaders: [
             {test: /\.jsx$/, exclude: /node_modules/, loader: 'babel-loader?experimental'},
-            { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' },
+            {test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000'},
             // Needed for the css-loader when [bootstrap-webpack](https://github.com/bline/bootstrap-webpack)
             // loads bootstrap's css.
 //            / Needed for the css-loader when [bootstrap-webpack](https://github.com/bline/bootstrap-webpack)
@@ -66,7 +47,7 @@ module.exports = {
             {
                 test: /\.less$/,
                 loader: 'style!css!less-loader'
-            },
+            }
         ]
     },
 

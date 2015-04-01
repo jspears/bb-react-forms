@@ -7,6 +7,9 @@ var NestedMixin = {
         return {
             template: null,
             path: null,
+            schema: {},
+            value: {},
+            errors: {},
             onValueChange() {
 
             },
@@ -48,8 +51,18 @@ var NestedMixin = {
             value[path] = newValue;
         }
     },
-    handleValidate(){
-        this.props.onValidate.apply(this, arguments);
+
+    setErrors(errors, newValue, oldValue, property, path, value){
+        var parts = path.split('.', 2), key = parts[0], rest = parts[1];
+        value[path] = errors;
+
+    },
+    handleValidate(errors, newValue, oldValue, property, path){
+        if (this.props.onValidate(newValue, oldValue, property, path) !== false) {
+            if (this.form === this) {
+                this.setErrors(errors, newValue, oldValue, property, path, this.props.errors);
+            }
+        }
     },
     getErrorMessages(){
         var refs = this.refs;
@@ -98,10 +111,10 @@ var NestedMixin = {
     },
     addEditor(field){
         var f = field.name;
-        var {path, value} = this.props;
+        var {path, value, errors} = this.props;
         return <Editor ref={f} key={'key-' + f} path={tu.path(path, f)} value={value && value[f]}
                        field={field}
-                       errors={this.props.errors}
+                       errors={errors}
                        form={this.form}
                        template={field.template}
                        onValueChange={this.handleValueChange} onValidate={this.handleValidate}/>
@@ -154,7 +167,7 @@ var NestedMixin = {
     renderSchema(form) {
         if (form) {
             this.form = form;
-        }else{
+        } else {
             this.form = this;
         }
         var schema = this.schema, fieldsets = schema.fieldsets, fields = schema.fields || Object.keys(schema.schema);
