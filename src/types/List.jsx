@@ -82,12 +82,13 @@ var ListInput = React.createClass({
         item.canReorder = field.canReorder;
         item.canDelete = field.canDelete;
         item.canEdit = field.canEdit;
+        item.canAdd = field.canAdd;
         this._item = item;
         return (<div className="list-editor">
             {this.renderAdd()}
             <ul className="edit-list list-group">
                 {values.map((v, i) => {
-                    return <ListItemTemplate key={'li-' + name + '-' + v.id} pos={i} path={tu.path(path,v.id)}
+                    return <ListItemTemplate ref={name+'_'+i} key={'li-' + name + '-' + v.id} pos={i} path={tu.path(path,v.id)}
                                              onMoveUp={this.handleMoveUp}
                                              onMoveDown={this.handleMoveDown} onDelete={this.handleDelete}
                                              onEdit={this.handleEdit}

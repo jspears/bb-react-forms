@@ -107,14 +107,17 @@ var CollectionMixin = {
                     form={null}/>
             </div>
             <div className="form-group">
-                <button className="btn btn-default pull-left" onClick={this.handleCancelAdd}>Cancel</button>
-                <button className="btn btn-primary pull-right" onClick={handler}>{label}</button>
+                <button className="btn btn-default pull-left" ref="cancelBtn" onClick={this.handleCancelAdd}>Cancel</button>
+                <button className="btn btn-primary pull-right" ref={create ? 'createBtn' : 'editBtn'} onClick={handler}>{label}</button>
             </div>
         </div>
     },
     renderAddBtn() {
+        if (!this.props.field.canAdd){
+            return null;
+        }
         return <div className="clearfix">
-            <button className="btn btn-xs pull-right btn-default" onClick={this.handleAddBtn}><i
+            <button className="btn btn-xs pull-right btn-default" ref="addBtn" onClick={this.handleAddBtn}><i
                 className="icon-add"/>Add
             </button>
         </div>

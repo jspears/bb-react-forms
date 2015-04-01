@@ -52,8 +52,8 @@ module.exports = {
         }
     },
     errors: {
-        'address.city': {
+        'address.city': [{
             message: 'Not the right place'
-        }
+        }]
     }
 };

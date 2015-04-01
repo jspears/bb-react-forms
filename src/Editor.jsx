@@ -40,6 +40,9 @@ var Editor = React.createClass({
 
         }
     },
+    getInitialState(){
+        return {}
+    },
 
     componentWillMount(){
         var validators = this.props.field.validators;
@@ -48,10 +51,10 @@ var Editor = React.createClass({
     handleValidate(newValue, oldValue, path) {
         this.validate(newValue, oldValue, path);
     },
-    handleChange(newValue, oldValue, path) {
+    handleChange(newValue, oldValue, name) {
         var errors = this.getErrorMessages(newValue), isValid = errors.length === 0;
         //if (isValid) {
-        this.props.onValueChange.apply(this, arguments);
+        this.props.onValueChange(newValue, oldValue, name, this.props.path);
         var hasValidated = this.state.hasValidated;
         if (!hasValidated && !isValid) {
             //don't show errors on change if it has never been validated.
@@ -125,6 +128,7 @@ var Editor = React.createClass({
                                     errorClassName={errorClassName} message={errMessage}>
             <Component ref="field" value={value} {...props} field={field} name={name} form={this.props.form}
                        error={err}
+
                        onValueChange={this.handleChange}
                        onValidate={this.handleValidate}/>
         </Template> :

@@ -3,7 +3,7 @@ module.exports = {
         "schema": {
             "tasks": {
                 type: "List",
-                title:'Task',
+                title: 'Task',
                 canAdd: true,
                 canDelete: true,
                 canReorder: true,
@@ -18,10 +18,10 @@ module.exports = {
     data: {
         tasks: ['Get Stuff', 'Do Stuff', 'Go Home']
     },
-    errors:{
-        'todos.1':{
-            message:'No your not going to'
-        }
+    errors: {
+        'todos.1': [{
+            message: 'No your not going to'
+        }]
     }
 }
 ;

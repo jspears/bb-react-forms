@@ -36,8 +36,8 @@ module.exports = {
         }
     },
     errors: {
-        'questionare.question2.answer': {
+        'questionare.question2.answer': [{
             message: 'Are you sure?'
-        }
+        }]
     }
 }

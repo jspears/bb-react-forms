@@ -18,9 +18,9 @@ module.exports = {
     },
     data:{},
     errors:{
-        username:{
+        username:[{
             message:'This username already exists'
-        }
+        }]
     }
 
 

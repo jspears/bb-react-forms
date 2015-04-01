@@ -12,9 +12,9 @@ module.exports = {
         name: 'Johnson'
     },
     errors: {
-        name: {
+        name: [{
             message: 'Name is already taken'
-        }
+        }]
     }
 
 };
