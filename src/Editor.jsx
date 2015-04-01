@@ -38,7 +38,7 @@ var Editor = React.createClass({
             },
             onValidate() {
             },
-            editorTemplate:EditorTemplate
+            template: EditorTemplate
 
         }
     },
@@ -50,7 +50,7 @@ var Editor = React.createClass({
         }
     },
     componentWillReceiveProps(newProps) {
-     //   this.setState(this._handleErrorObj(newProps));
+        //   this.setState(this._handleErrorObj(newProps));
     },
     componentWillMount(){
         var validators = this.props.field.validators;
@@ -118,23 +118,25 @@ var Editor = React.createClass({
         });
     },
     render() {
-        var {field, name, value, onValueChange, editorTemplate, onValidate, ...props} = this.props,
+        var {field, name, value, onValueChange,  template,onValidate, ...props} = this.props,
             {name,type,fieldClass, errorClassName, help} = field,
             errMessage = this.state.message,
             Component = require('types/' + type + '.jsx'),
             title = this.title(),
             errorClassName = errorClassName == null ? 'has-error' : errorClassName;
-        var EditorTemplate = editorTemplate || this.props.editorTemplate;
-        if (editorTemplate == false || type === 'Hidden') {
-            EditorTemplate = null;
+        var Template = template;
+        if (template === false || field.template === false || type === 'Hidden') {
+            Template = null;
+        }else{
+            Template = EditorTemplate;
         }
         //errMessage, errorClassName, name, fieldClass, title, help
-        return EditorTemplate ? <EditorTemplate name={name} fieldClass={fieldClass} title={title} help={help}
+        return Template ? <Template name={name} fieldClass={fieldClass} title={title} help={help}
                                                 errorClassName={errorClassName} message={errMessage}>
             <Component ref="field" value={value} {...props} field={field} name={name} form={this.props.form}
                        onValueChange={this.handleChange}
                        onValidate={this.handleValidate}/>
-        </EditorTemplate> :
+        </Template> :
             <Component ref="field" value={value} {...props} field={field} name={name} form={this.props.form}
                        onValueChange={this.handleChange}
                        onValidate={this.handleValidate}/>;

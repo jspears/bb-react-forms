@@ -19,11 +19,11 @@ module.exports = {
                 type: 'Radio'
             },
             radio2: {
-                options:  ['Sterling', 'Lana', 'Cyril', 'Cheryl', 'Pam'],
+                options: ['Sterling', 'Lana', 'Cyril', 'Cheryl', 'Pam'],
                 type: 'Radio'
             },
             radioWithLabel: {
-                options:  [
+                options: [
                     {
                         labelHTML: '<b>HTML</b>'
                     }
@@ -32,11 +32,12 @@ module.exports = {
             }
         }
     },
-    data:{
-        radio1:1,
-        radio2:'Cyril',
-        radioWithLabel:0
-    }
+    data: {
+        radio1: 1,
+        radio2: 'Cyril',
+        radioWithLabel: 0
+    },
+    errors: {}
 
 
 }

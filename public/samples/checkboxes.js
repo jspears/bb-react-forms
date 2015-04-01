@@ -28,7 +28,9 @@ module.exports = {
                 type: 'Checkboxes'
             }
         }
-    }
+    },
+    data:{},
+    errors:{}
 
 
 }

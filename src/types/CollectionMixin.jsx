@@ -10,34 +10,28 @@ var CollectionMixin = {
         this.setState(this.wrap(newProps));
     },
     getItemEditorValue(){
-        var value = this.refs.itemEditor.getValue();
-        return value;
+        return this.refs.itemEditor.getValue();
     },
     getValue(){
         return this.unwrap(this.state.wrapped);
     },
     handleMoveUp(pos, val) {
-        console.log('move-up', arguments);
         var values = this.state.wrapped, oval = values && values.concat();
         values.splice(Math.max(pos - 1, 0), 0, values.splice(pos, 1)[0]);
         this.changeValue(values, oval);
     },
     handleMoveDown(pos, val) {
-        console.log('move-down', arguments);
         var values = this.state.wrapped, oval = values && values.concat();
         values.splice(Math.min(pos + 1, values.length), 0, values.splice(pos, 1)[0]);
         this.changeValue(values, oval);
 
     },
     handleDelete(pos, val, pid) {
-        console.log('delete', arguments);
         var values = this.state.wrapped, oval = values && values.concat();
         values.splice(pos, 1);
         this.changeValue(values, oval);
     },
     handleEdit(pos, val, pid) {
-        console.log('delete', arguments);
-
         this.setState({
             showAdd: false,
             showEdit: true,
@@ -73,16 +67,14 @@ var CollectionMixin = {
     },
     handleEditValue(e) {
         e && e.preventDefault();
-        var value = this.state.wrapped || [], editPid = this.state.editPid, nv = this.getItemEditorValue(), pos = 0;
+        var value = this.state.wrapped, oval = values && values.concat(), editPid = this.state.editPid, nv = this.getItemEditorValue();
         value.some(function (v, i) {
             if (v.id === editPid) {
-                pos = i;
-
                 v.value = nv;
                 return true;
             }
         });
-        this.changeValue(value);
+        this.changeValue(value, oval);
 
     },
 
@@ -107,31 +99,37 @@ var CollectionMixin = {
         } else {
             return null;
         }
-        var form = this.props.form;
         var value = this.state.editValue || (this.state.editValue = {})
         return <div className="panel-body">
+            <div className="form-group">
             <Editor ref="itemEditor" field={this.getTemplateItem()} value={value}
                     pid={this.state.editPid}
                     form={null}/>
-            <button className="btn btn-primary pull-right" onClick={handler}>{label}</button>
-            <button className="btn pull-left" onClick={this.handleCancelAdd}>Cancel</button>
+            </div>
+            <div className="form-group">
+                <button className="btn btn-default pull-left" onClick={this.handleCancelAdd}>Cancel</button>
+                <button className="btn btn-primary pull-right" onClick={handler}>{label}</button>
+            </div>
         </div>
     },
     renderAddBtn() {
-        return <div className="clearfix"><button className="btn btn-xs pull-right btn-default" onClick={this.handleAddBtn}><i
-            className="icon-add"/>Add</button></div>
+        return <div className="clearfix">
+            <button className="btn btn-xs pull-right btn-default" onClick={this.handleAddBtn}><i
+                className="icon-add"/>Add
+            </button>
+        </div>
     },
 
     renderAdd() {
         var field = this.props.field;
-        if (!field.canAdd) {
+        if (!(field.canAdd || field.canEdit)) {
             return null;
         }
         var {showAdd, showEdit} = this.state;
         return showAdd || showEdit ? <div className="panel panel-default">
             <div className="panel-heading">
                 <h3 className={ 'panel-title clearfix '}>
-                    {showAdd ? 'Create' : 'Edit'  }
+                    {showAdd ? 'Create ' + this.props.title : 'Edit ' + this.props.title  }
                 </h3>
             </div>
             { this.renderAddEditTemplate(showEdit, showAdd) }

@@ -67,6 +67,7 @@ var ListInput = React.createClass({
         return {
             type: 'Object',
             name: this.props.field.name,
+            title: this.props.field.title,
             subSchema: {
                 value: this.props.field.itemType || this.props.itemType
             },

@@ -130,25 +130,31 @@ var App = React.createClass({
 
         return <div className="container-fluid">
             <div className="row-fluid">
-                <div className="span2">
-                    <select onChange={this.changeFile} value={this.state.file}>
-                        <option value="none">None Selected</option>
-                        <option value="login">Login</option>
-                        <option value="mixed">Mixed</option>
-                        <option value="checkboxes">Checkboxes</option>
-                        <option value="radio">Radio</option>
-                        <option value="nested">Nested</option>
-                        <option value="normal">Normal</option>
-                        <option value="list">List</option>
-                    </select>
 
-                    <label>Load Data:
-                        <input type="checkbox" onChange={this.handleData}/>
-                    </label>
-                    <label>Load Errors:
-                        <input type="checkbox" onChange={this.handleError}/>
-                    </label>
+                <div className="span2">
+                    <div className="form-inline">
+                        <select className="form-control" ref="selector" onChange={this.changeFile}
+                                value={this.state.file}>
+                            <option value="none">None Selected</option>
+                            <option value="mixed">Mixed</option>
+                            <option value="list">List</option>
+                            <option value="login">Login</option>
+                            <option value="nested">Nested</option>
+                            <option value="normal">Normal</option>
+                            <option value="checkboxes">Checkboxes</option>
+                            <option value="radio">Radio</option>
+                            <option value="hidden">hidden</option>
+                        </select>
+
+                        <label className="checkbox-inline">
+                            <input type="checkbox" onChange={this.handleData}/> Load Data
+                        </label>
+                        <label className="checkbox-inline">
+                            <input type="checkbox" onChange={this.handleError}/> Load Errors
+                        </label>
+                    </div>
                 </div>
+
                 <div className="span10">
                     <div className="container-fluid">
                         <div className="row-fluid">
@@ -162,18 +168,30 @@ var App = React.createClass({
                         </div>
                     </div>
                     <fieldset>
-                        <legend>Data</legend>
-                        <pre>{JSON.stringify(data || {}, null, 2)}</pre>
+                        <legend>Example Usage of {this.state.file}</legend>
+                        <pre>
+                             <div>var Form = require('bb-react-form').Form;</div>
+                             <div>var React = require('react');</div>
+                             <div>var data = {JSON.stringify(data || {}, null, 2)};</div>
+                             <div>var errors = {JSON.stringify(errors || {}, null, 2)};</div>
+                             <div>var schema = {JSON.stringify(schema || {}, null, 2)};</div>
+
+
+                            {'React.render(<Form value={data} schema={schema} errors={errors}/>, document.getElementById("content"))'}
+
+                        </pre>
+
                     </fieldset>
-                    <fieldset>
-                        <legend>Schema</legend>
-                        <pre>{JSON.stringify(schema || {}, null, 2)}</pre>
-                    </fieldset>
+
 
                 </div>
             </div>
-            { this.state.alert ? <MyModal ref="modal" onRequestHide={this.hideModal} errors={this.state.submitErrors}
-                                          value={this.state.submitValue}/> : null}
+
+            {
+                this.state.alert ?
+                    <MyModal ref="modal" onRequestHide={this.hideModal} errors={this.state.submitErrors}
+                             value={this.state.submitValue}/> : null
+            }
 
         </div>
     }

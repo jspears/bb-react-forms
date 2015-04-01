@@ -18,9 +18,9 @@ var path = require('path');
  console.log(entry);*/
 var entry = {
 
-    app: './public/app.jsx',
-    types: './src/types',
-    styles: './src/styles'
+    app: './public/app.jsx'
+  //  types: './src/types',
+  //  styles: './src/styles'
 }
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 

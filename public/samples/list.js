@@ -1,8 +1,9 @@
 module.exports = {
     schema: {
         "schema": {
-            "todos": {
+            "tasks": {
                 type: "List",
+                title:'Task',
                 canAdd: true,
                 canDelete: true,
                 canReorder: true,
@@ -11,11 +12,11 @@ module.exports = {
         },
         "fieldsets": [{
             "legend": "Todo",
-            "fields": ["todos"]
+            "fields": ["tasks"]
         }]
     },
     data: {
-        todos: ['Get Stuff', 'Do Stuff', 'Go Home']
+        tasks: ['Get Stuff', 'Do Stuff', 'Go Home']
     },
     errors:{
         'todos.1':{

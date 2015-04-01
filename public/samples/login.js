@@ -15,6 +15,12 @@ module.exports = {
             }
         },
         submitButton:'Login'
+    },
+    data:{},
+    errors:{
+        username:{
+            message:'This username already exists'
+        }
     }
 
 
