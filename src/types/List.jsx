@@ -4,7 +4,6 @@ var React = require('react');
 var _ = require('lodash');
 var tu = require('../tutils');
 var CollectionMixin = require('./CollectionMixin.jsx');
-
 var ListInput = React.createClass({
     mixins: [CollectionMixin],
     getDefaultProps() {

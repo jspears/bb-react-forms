@@ -1,8 +1,8 @@
 var React = require('react');
 var tpath = require('../tutils').path;
-var PropsStateValueMixin = require('../PropsStateValueMixin');
+//var PropsStateValueMixin = require('../PropsStateValueMixin');
 var ListItemTemplate = React.createClass({
-    mixins: [PropsStateValueMixin],
+//    mixins: [require('../PropsStateValueMixin')],
     getDefaultProps() {
         return {
             type: 'Text',
@@ -44,8 +44,8 @@ var ListItemTemplate = React.createClass({
         var field = this.props.field, content = this.props.itemToString(this.props.value);
 
         if (field.canEdit) {
-            return <a className="item-value" ref="edit" onClick={this.handleEdit}
-                      path={tpath(this.props.path, this.props.pos)}>{content}</a>;
+            return <span className="item-value" ref="edit" onClick={this.handleEdit}
+                      path={tpath(this.props.path, this.props.pos)}>{content}</span>;
         } else {
             return <span className="item-value">{content}</span>;
         }
@@ -53,7 +53,6 @@ var ListItemTemplate = React.createClass({
     render() {
         var {pos, field, value, errors, path, onValidate, last, onValueChange} = this.props;
         var {type, name, canReorder, canDelete} = field;
-        var Component = require('./' + type + '.jsx');
         var error = errors && errors[path];
         var btnCls = 'btn btn-xs btn-default'
         return <li className={'list-group-item '+(error ? 'has-error' : '')}>

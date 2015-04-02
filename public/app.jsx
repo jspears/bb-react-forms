@@ -34,6 +34,10 @@ var MyModal = React.createClass({
         );
     }
 });
+var samples = require.context('./samples/', true, /\.js(x)?$/).keys().map((v)=> {
+    return v.replace(/\.\/(.*)\.js(x)?/, '$1');
+});
+
 var App = React.createClass({
     getInitialState(){
         return {
@@ -41,7 +45,7 @@ var App = React.createClass({
             loadData: false,
             data: {},
             errors: {},
-            file: 'list'
+            file: 'Questionaire'
         }
     },
     parse: tu.debounce(function (value) {
@@ -128,22 +132,17 @@ var App = React.createClass({
         var {errors, schema, data, loadErrors, loadData} = this.state;
 
 
-        return <div className="container-fluid">
-            <div className="row-fluid">
-
-                <div className="span2">
+        return <div>
+            <div class="navbar">
+                <div class="navbar-inner">
                     <div className="form-inline">
                         <select className="form-control" ref="selector" onChange={this.changeFile}
                                 value={this.state.file}>
                             <option value="none">None Selected</option>
-                            <option value="mixed">Mixed</option>
-                            <option value="list">List</option>
-                            <option value="login">Login</option>
-                            <option value="nested">Nested</option>
-                            <option value="normal">Normal</option>
-                            <option value="checkboxes">Checkboxes</option>
-                            <option value="radio">Radio</option>
-                            <option value="hidden">hidden</option>
+                            {samples.map((v)=> {
+                                return <option value={v}>{v}</option>
+                            })}
+
                         </select>
 
                         <label className="checkbox-inline">
@@ -154,21 +153,25 @@ var App = React.createClass({
                         </label>
                     </div>
                 </div>
+            </div>
 
-                <div className="span10">
-                    <div className="container-fluid">
-                        <div className="row-fluid">
-                            <div className="span12">
-                                <Form schema={schema} value={data}
-                                      errors={ errors }
-                                      onValueChange={this.handleValueChange}
-                                      onSubmit={this.handleSubmit}
-                                      onValidate={this.handleErrors}/>
+            <div className="container-fluid">
+                <div className="row-fluid">
+
+                    <div className="span10">
+                        <div className="container-fluid">
+                            <div className="row-fluid">
+                                <div className="span12">
+                                    <Form schema={schema} value={data}
+                                          errors={ errors }
+                                          onValueChange={this.handleValueChange}
+                                          onSubmit={this.handleSubmit}
+                                          onValidate={this.handleErrors}/>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <fieldset>
-                        <legend>Example Usage of {this.state.file}</legend>
+                        <fieldset>
+                            <legend>Example Usage of {this.state.file}</legend>
                         <pre>
                              <div>var Form = require('bb-react-form').Form;</div>
                              <div>var React = require('react');</div>
@@ -181,18 +184,19 @@ var App = React.createClass({
 
                         </pre>
 
-                    </fieldset>
+                        </fieldset>
 
 
+                    </div>
                 </div>
+
+                {
+                    this.state.alert ?
+                        <MyModal ref="modal" onRequestHide={this.hideModal} errors={this.state.submitErrors}
+                                 value={this.state.submitValue}/> : null
+                }
+
             </div>
-
-            {
-                this.state.alert ?
-                    <MyModal ref="modal" onRequestHide={this.hideModal} errors={this.state.submitErrors}
-                             value={this.state.submitValue}/> : null
-            }
-
         </div>
     }
 

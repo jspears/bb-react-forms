@@ -5,69 +5,49 @@ describe('List', function () {
     var Form = require('../../src/index').Form;
     var Simulate = React.addons.TestUtils.Simulate;
     var _ = require('lodash');
+
+
+    var Todos = require('../../public/samples/Todos'), Schema = Todos.schema;
     it('should render a list', function () {
-        var schema = {
-            schema: {
-                todos: {
-                    type: 'List',
-                    itemType: 'Text',
-                    canAdd: true,
-                    canEdit: true,
-                    canReorder: true,
-                    canDelete: true
-                }
-            }
-        }
-        var root = TestUtils.renderIntoDocument(<Form schema={schema}/>);
+        var root = TestUtils.renderIntoDocument(<Form schema={Schema}/>);
         expect(root).toExist();
-        expect(root.refs.todos).toExist();
-        expect(root.refs.todos.refs.field.refs.todos_0).toNotExist();
-        expect(root.refs.todos.refs.field.refs.todos_1).toNotExist();
-        expect(root.refs.todos.refs.field.refs.todos_2).toNotExist();
+        expect(root.refs.tasks).toExist();
+        expect(root.refs.tasks.refs.field.refs.tasks_0).toNotExist();
+        expect(root.refs.tasks.refs.field.refs.tasks_1).toNotExist();
+        expect(root.refs.tasks.refs.field.refs.tasks_2).toNotExist();
     });
     it('should render a list with data the canAdd', function () {
-        var schema = {
-            schema: {
-                todos: {
-                    type: 'List',
-                    itemType: 'Text',
-                    canAdd: true,
-                    canEdit: true,
-                    canReorder: true,
-                    canDelete: true
-                }
-            }
-        }, data = {
-            todos: [
+        var data = {
+            tasks: [
                 'one',
                 'two',
                 'three'
             ]
-        }
-        var root = TestUtils.renderIntoDocument(<Form schema={schema} value={data}/>);
+        };
+        var root = TestUtils.renderIntoDocument(<Form schema={Schema} value={data}/>);
         expect(root).toExist();
-        expect(root.refs.todos).toExist();
-        expect(root.refs.todos.refs.field.refs.addBtn).toExist();
-        var todos = root.refs.todos.refs.field.refs
+        expect(root.refs.tasks).toExist();
+        expect(root.refs.tasks.refs.field.refs.addBtn).toExist();
+        var tasks = root.refs.tasks.refs.field.refs
 
-        expect(todos.todos_0.refs.upBtn).toNotExist();
-        expect(todos.todos_0.refs.deleteBtn).toExist();
-        expect(todos.todos_0.refs.downBtn).toExist();
+        expect(tasks.tasks_0.refs.upBtn).toNotExist();
+        expect(tasks.tasks_0.refs.deleteBtn).toExist();
+        expect(tasks.tasks_0.refs.downBtn).toExist();
 
-        expect(todos.todos_1.refs.upBtn).toExist();
-        expect(todos.todos_1.refs.deleteBtn).toExist();
-        expect(todos.todos_1.refs.downBtn).toExist();
+        expect(tasks.tasks_1.refs.upBtn).toExist();
+        expect(tasks.tasks_1.refs.deleteBtn).toExist();
+        expect(tasks.tasks_1.refs.downBtn).toExist();
 
-        expect(todos.todos_2.refs.upBtn).toExist();
-        expect(todos.todos_2.refs.deleteBtn).toExist();
-        expect(todos.todos_2.refs.downBtn).toNotExist();
+        expect(tasks.tasks_2.refs.upBtn).toExist();
+        expect(tasks.tasks_2.refs.deleteBtn).toExist();
+        expect(tasks.tasks_2.refs.downBtn).toNotExist();
 
 
     });
     it('should render a list with data without canAdd', function () {
         var schema = {
             schema: {
-                todos: {
+                tasks: {
                     type: 'List',
                     itemType: 'Text',
                     canEdit: true,
@@ -76,29 +56,29 @@ describe('List', function () {
                 }
             }
         }, data = {
-            todos: [
+            tasks: [
                 'one',
                 'two',
                 'three'
             ]
         }
         var root = TestUtils.renderIntoDocument(<Form schema={schema} value={data}/>);
-        var todos = root.refs.todos.refs.field.refs
-        expect(todos.addBtn).toNotExist();
-        expect(todos.todos_0).toExist();
-        expect(todos.todos_1).toExist();
-        expect(todos.todos_2).toExist();
+        var tasks = root.refs.tasks.refs.field.refs
+        expect(tasks.addBtn).toNotExist();
+        expect(tasks.tasks_0).toExist();
+        expect(tasks.tasks_1).toExist();
+        expect(tasks.tasks_2).toExist();
     });
     it('should render a list with data is not editable', function () {
         var schema = {
             schema: {
-                todos: {
+                tasks: {
                     type: 'List',
                     itemType: 'Text'
                 }
             }
         }, data = {
-            todos: [
+            tasks: [
                 'one',
                 'two',
                 'three'
@@ -106,26 +86,26 @@ describe('List', function () {
         }
         var root = TestUtils.renderIntoDocument(<Form schema={schema} value={data}/>);
 
-        expect(root.refs.todos.refs.field.refs.addBtn).toNotExist();
-        var todos = root.refs.todos.refs.field.refs;
+        expect(root.refs.tasks.refs.field.refs.addBtn).toNotExist();
+        var tasks = root.refs.tasks.refs.field.refs;
 
-        expect(todos.todos_0.refs.upBtn).toNotExist();
-        expect(todos.todos_0.refs.deleteBtn).toNotExist();
-        expect(todos.todos_0.refs.downBtn).toNotExist();
+        expect(tasks.tasks_0.refs.upBtn).toNotExist();
+        expect(tasks.tasks_0.refs.deleteBtn).toNotExist();
+        expect(tasks.tasks_0.refs.downBtn).toNotExist();
 
-        expect(todos.todos_1.refs.upBtn).toNotExist();
-        expect(todos.todos_1.refs.deleteBtn).toNotExist();
-        expect(todos.todos_1.refs.downBtn).toNotExist();
+        expect(tasks.tasks_1.refs.upBtn).toNotExist();
+        expect(tasks.tasks_1.refs.deleteBtn).toNotExist();
+        expect(tasks.tasks_1.refs.downBtn).toNotExist();
 
-        expect(todos.todos_2.refs.upBtn).toNotExist();
-        expect(todos.todos_2.refs.deleteBtn).toNotExist();
-        expect(todos.todos_2.refs.downBtn).toNotExist();
+        expect(tasks.tasks_2.refs.upBtn).toNotExist();
+        expect(tasks.tasks_2.refs.deleteBtn).toNotExist();
+        expect(tasks.tasks_2.refs.downBtn).toNotExist();
 
     });
     it('should render a list without data and add values', function () {
         var schema = {
             schema: {
-                todos: {
+                tasks: {
                     type: 'List',
                     itemType: 'Text',
                     canAdd: true,
@@ -135,27 +115,43 @@ describe('List', function () {
                 }
             }
         }, data = {
-            todos:[]
+            tasks: []
         }
         var root = TestUtils.renderIntoDocument(<Form schema={schema} value={data}/>);
         expect(root).toExist();
-        expect(root.refs.todos).toExist();
+        expect(root.refs.tasks).toExist();
+        function add(c) {
+            var refs = root.refs.tasks.refs.field.refs;
+            Simulate.click(refs.addBtn);
+            var input = refs.itemEditor.refs.field.refs.value.refs.field.refs.input;
+            Simulate.change(input, {target: {value: 'Hello, world ' + c}});
+            Simulate.click(refs.createBtn);
+            expect(data.tasks[c]).toEqual('Hello, world ' + c);
+            var tasks = root.refs.tasks.refs.field.refs;
+            return tasks['tasks_' + c].refs
+        }
 
-        var refs = root.refs.todos.refs.field.refs;
-        Simulate.click(refs.addBtn);
-        var input = refs.itemEditor.refs.field.refs.value.refs.field.refs.input;
-        Simulate.change(input, {target: {value: 'Hello, world'}});
-        Simulate.click(refs.createBtn);
-        expect(data.todos[0]).toEqual('Hello, world');
+        var a0 = add(0);
+        expect(a0.upBtn).toNotExist();
+        expect(a0.deleteBtn).toExist();
+        expect(a0.downBtn).toNotExist();
+        var a1 = add(1);
+        expect(a1.upBtn).toExist();
+        expect(a1.deleteBtn).toExist();
+        expect(a1.downBtn).toNotExist();
+        var a2 = add(2);
+        expect(a2.upBtn).toExist();
+        expect(a2.deleteBtn).toExist();
+        expect(a2.downBtn).toNotExist();
+        expect(a1.downBtn).toExist();
 
-/*
-        expect(todos.todos_1.refs.upBtn).toExist();
-        expect(todos.todos_1.refs.deleteBtn).toExist();
-        expect(todos.todos_1.refs.downBtn).toExist();
-
-        expect(todos.todos_2.refs.upBtn).toExist();
-        expect(todos.todos_2.refs.deleteBtn).toExist();
-        expect(todos.todos_2.refs.downBtn).toNotExist();*/
+        Simulate.click(a0.deleteBtn);
+        expect(data.tasks.length).toEqual(2);
+        Simulate.click(a1.deleteBtn);
+        expect(data.tasks.length).toEqual(1);
+        Simulate.click(a2.deleteBtn);
+        expect(data.tasks.length).toEqual(0);
+        
 
 
     });

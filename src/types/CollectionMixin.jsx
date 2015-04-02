@@ -6,9 +6,6 @@ var CollectionMixin = {
     getInitialState() {
         return this.wrap(this.props);
     },
-    componentWillReceiveProps: function (newProps) {
-        this.setState(this.wrap(newProps));
-    },
     getItemEditorValue(){
         return this.refs.itemEditor.getValue();
     },
@@ -41,17 +38,14 @@ var CollectionMixin = {
     },
 
     changeValue(newValue, oldValue) {
-        var unwrapped = this.unwrap(newValue);
-        if (this.props.onValueChange(unwrapped, this.unwrap(oldValue), this.props.name, this.props.path) !== false) {
+        if (this.props.onValueChange(this.unwrap(newValue), this.unwrap(oldValue), this.props.name, this.props.path) !== false) {
+            this.setState({
+                wrapped: newValue,
+                showAdd: false,
+                showEdit: false,
+                editValue: null
+            });
         }
-
-        this.setState({
-            value: unwrapped,
-            wrapped: newValue,
-            showAdd: false,
-            showEdit: false,
-            editValue: null
-        });
     },
     handleAddBtn(e) {
         e && e.preventDefault();
@@ -102,18 +96,20 @@ var CollectionMixin = {
         var value = this.state.editValue || (this.state.editValue = {})
         return <div className="panel-body">
             <div className="form-group">
-            <Editor ref="itemEditor" field={this.getTemplateItem()} value={value}
-                    pid={this.state.editPid}
-                    form={null}/>
+                <Editor ref="itemEditor" field={this.getTemplateItem()} value={value}
+                        pid={this.state.editPid}
+                        form={null}/>
             </div>
             <div className="form-group">
-                <button className="btn btn-default pull-left" ref="cancelBtn" onClick={this.handleCancelAdd}>Cancel</button>
-                <button className="btn btn-primary pull-right" ref={create ? 'createBtn' : 'editBtn'} onClick={handler}>{label}</button>
+                <button className="btn btn-default pull-left" ref="cancelBtn" onClick={this.handleCancelAdd}>Cancel
+                </button>
+                <button className="btn btn-primary pull-right" ref={create ? 'createBtn' : 'editBtn'}
+                        onClick={handler}>{label}</button>
             </div>
         </div>
     },
     renderAddBtn() {
-        if (!this.props.field.canAdd){
+        if (!this.props.field.canAdd) {
             return null;
         }
         return <div className="clearfix">
