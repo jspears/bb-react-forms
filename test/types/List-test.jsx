@@ -151,7 +151,7 @@ describe('List', function () {
         expect(data.tasks.length).toEqual(1);
         Simulate.click(a2.deleteBtn);
         expect(data.tasks.length).toEqual(0);
-        
+
 
 
     });
